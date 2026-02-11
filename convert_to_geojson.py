@@ -2,10 +2,11 @@ import json
 import os
 import glob
 from shapely.wkt import loads
+from shapely.geometry import mapping
 import geojson
 
-# --- CONFIGURATION (This is what you asked about) ---
-INPUT_DIR = "./data/guatemala_demo/fema"  # <--- HERE IT IS
+# --- CONFIGURATION ---
+INPUT_DIR = "./data/guatemala_demo/fema"
 OUTPUT_FILE = "./data/guatemala_damage.geojson"
 
 # COLOR MAPPING
@@ -17,11 +18,9 @@ DAMAGE_COLOR = {
     "un-classified": "#808080"  # Grey
 }
 
-
 def xview2_to_geojson(input_dir, output_file):
     features = []
 
-    # Verify directory exists
     if not os.path.exists(input_dir):
         print(f"Error: Directory not found: {input_dir}")
         return
@@ -36,30 +35,44 @@ def xview2_to_geojson(input_dir, output_file):
         if "post" not in j_file:
             continue
 
-        for obj in data['features']['xy']:
+        # USE lng_lat INSTEAD OF xy !!!
+        for obj in data['features']['lng_lat']:  # <--- CHANGED THIS LINE
             wkt_str = obj['wkt']
             try:
                 poly = loads(wkt_str)
-            except Exception:
+                geometry = mapping(poly)
+            except Exception as e:
+                print(f"Skipping invalid polygon: {e}")
                 continue
 
             subtype = obj['properties'].get('subtype', 'un-classified')
 
-            feature = geojson.Feature(
-                geometry=poly,
-                properties={
+            feature = {
+                "type": "Feature",
+                "geometry": geometry,
+                "properties": {
                     "damage": subtype,
                     "color": DAMAGE_COLOR.get(subtype, "#808080"),
                     "image_id": data['metadata']['img_name']
                 }
-            )
+            }
             features.append(feature)
 
-    feature_collection = geojson.FeatureCollection(features)
-    with open(output_file, 'w') as f:
-        geojson.dump(feature_collection, f)
+    feature_collection = {
+        "type": "FeatureCollection",
+        "features": features
+    }
 
-    print(f"Success! Map data saved to {output_file}")
+    with open(output_file, 'w') as f:
+        json.dump(feature_collection, f, indent=2)
+
+    print(f"Success! Created {len(features)} features")
+    print(f"Map data saved to {output_file}")
+
+    # Print first coordinate to verify
+    if features:
+        first_coord = features[0]['geometry']['coordinates'][0][0]
+        print(f"Sample coordinate: {first_coord} (should be around -90.8, 14.4)")
 
 
 if __name__ == "__main__":

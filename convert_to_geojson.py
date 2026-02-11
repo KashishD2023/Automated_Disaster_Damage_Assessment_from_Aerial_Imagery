@@ -6,8 +6,8 @@ from shapely.geometry import mapping
 import geojson
 
 # --- CONFIGURATION ---
-INPUT_DIR = "./data/guatemala_demo/fema"
-OUTPUT_FILE = "./data/guatemala_damage.geojson"
+INPUT_DIR = "./data/santa_rosa_demo/fema"  # CHANGED
+OUTPUT_FILE = "./data/santa_rosa_damage.geojson"  # CHANGED
 
 # COLOR MAPPING
 DAMAGE_COLOR = {

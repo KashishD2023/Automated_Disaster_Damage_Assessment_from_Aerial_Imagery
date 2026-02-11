@@ -18,7 +18,7 @@ st.markdown("""
 # --- 1. LOAD THE MAP DATA ---
 @st.cache_data
 def load_data():
-    file_path = "./data/guatemala_damage.geojson"
+    file_path = "./data/santa_rosa_damage.geojson"  # CHANGED
 
     try:
         with open(file_path, 'r') as f:

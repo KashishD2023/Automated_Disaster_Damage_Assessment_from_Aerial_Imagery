@@ -4,7 +4,7 @@ import json
 from PIL import Image
 
 # --- CONFIGURATION ---
-BASE_DIR = "./data/raw"
+BASE_DIR = "./data/guatemala_demo"
 PRE_DIR = os.path.join(BASE_DIR, "pre")
 POST_DIR = os.path.join(BASE_DIR, "post")
 LABEL_DIR = os.path.join(BASE_DIR, "fema")

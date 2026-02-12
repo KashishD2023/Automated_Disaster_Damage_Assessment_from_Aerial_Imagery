@@ -18,7 +18,7 @@ st.markdown("""
 # --- 1. LOAD THE MAP DATA ---
 @st.cache_data
 def load_data():
-    file_path = "./data/santa_rosa_damage.geojson"  # CHANGED
+    file_path = "./data/ai_santa_rosa_damage.geojson"  # CHANGED
 
     try:
         with open(file_path, 'r') as f:
@@ -110,7 +110,10 @@ with col1:
         m.get_root().html.add_child(folium.Element(legend_html))
 
     else:
-        m = folium.Map(location=[14.47, -90.88], zoom_start=15, tiles="OpenStreetMap")
+        #-122.7534731377982,
+        #38.50148499983604
+        #m = folium.Map(location=[14.47, -90.88], zoom_start=15, tiles="OpenStreetMap")
+        m = folium.Map(location=[-122.7534731377982, 38.50148499983604], zoom_start=1, tiles="OpenStreetMap")
 
     map_html = m._repr_html_()
     html(map_html, height=600)

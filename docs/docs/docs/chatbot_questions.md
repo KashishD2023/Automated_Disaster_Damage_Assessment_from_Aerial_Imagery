@@ -48,3 +48,36 @@ response planning.
 ## Response Style
 Responses should be clear, concise, and easy to understand. When possible, numerical
 summaries should be included, and the chatbot may suggest a follow-up question.
+
+---
+
+## Week 2 – Chatbot Backend & Evaluation Integration (Person 6)
+
+### Objective
+Define how the chatbot will interact with backend data and how its outputs
+will later be evaluated against FEMA damage labels.
+
+### Backend Data Usage
+The chatbot will retrieve:
+- Tile ID
+- Predicted damage class
+- Confidence score
+- FEMA damage label (when available)
+- Associated pre- and post-disaster imagery
+
+### Planned Chatbot Flow
+1. User submits a damage-related question.
+2. The chatbot identifies the question type (area-based or tile-based).
+3. The chatbot queries backend data sources.
+4. The chatbot formats a human-readable response.
+
+### Evaluation Considerations
+Chatbot responses will rely on model predictions that will be evaluated using:
+- Accuracy
+- Confusion matrix
+- Comparison with FEMA ground-truth labels
+
+### Week 2 Status
+This section documents the planned integration only.
+No backend queries or evaluation code is implemented yet.
+

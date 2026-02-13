@@ -1,1 +1,2594 @@
-[]
+[
+  {
+    "building_id": 1,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      19,
+      10,
+      81,
+      44
+    ]
+  },
+  {
+    "building_id": 2,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      65,
+      59,
+      131,
+      103
+    ]
+  },
+  {
+    "building_id": 3,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      107,
+      7,
+      166,
+      49
+    ]
+  },
+  {
+    "building_id": 4,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      112,
+      126,
+      169,
+      166
+    ]
+  },
+  {
+    "building_id": 5,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      164,
+      82,
+      221,
+      122
+    ]
+  },
+  {
+    "building_id": 6,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      186,
+      17,
+      245,
+      60
+    ]
+  },
+  {
+    "building_id": 7,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      203,
+      114,
+      252,
+      149
+    ]
+  },
+  {
+    "building_id": 8,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      220,
+      160,
+      273,
+      201
+    ]
+  },
+  {
+    "building_id": 9,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      257,
+      12,
+      314,
+      52
+    ]
+  },
+  {
+    "building_id": 10,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      287,
+      63,
+      344,
+      101
+    ]
+  },
+  {
+    "building_id": 11,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      285,
+      29,
+      340,
+      68
+    ]
+  },
+  {
+    "building_id": 12,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      323,
+      10,
+      362,
+      54
+    ]
+  },
+  {
+    "building_id": 13,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      363,
+      62,
+      404,
+      107
+    ]
+  },
+  {
+    "building_id": 14,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      353,
+      15,
+      403,
+      56
+    ]
+  },
+  {
+    "building_id": 15,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      384,
+      150,
+      432,
+      192
+    ]
+  },
+  {
+    "building_id": 16,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      396,
+      197,
+      442,
+      237
+    ]
+  },
+  {
+    "building_id": 17,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      415,
+      68,
+      461,
+      109
+    ]
+  },
+  {
+    "building_id": 18,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      419,
+      39,
+      469,
+      79
+    ]
+  },
+  {
+    "building_id": 19,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      447,
+      0,
+      506,
+      27
+    ]
+  },
+  {
+    "building_id": 20,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      461,
+      38,
+      513,
+      76
+    ]
+  },
+  {
+    "building_id": 21,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      478,
+      119,
+      532,
+      167
+    ]
+  },
+  {
+    "building_id": 22,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      454,
+      160,
+      499,
+      199
+    ]
+  },
+  {
+    "building_id": 23,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      504,
+      11,
+      560,
+      64
+    ]
+  },
+  {
+    "building_id": 24,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      516,
+      187,
+      563,
+      227
+    ]
+  },
+  {
+    "building_id": 25,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      520,
+      87,
+      563,
+      119
+    ]
+  },
+  {
+    "building_id": 26,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      568,
+      12,
+      621,
+      53
+    ]
+  },
+  {
+    "building_id": 27,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      561,
+      79,
+      608,
+      126
+    ]
+  },
+  {
+    "building_id": 28,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      604,
+      0,
+      655,
+      34
+    ]
+  },
+  {
+    "building_id": 29,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      607,
+      73,
+      650,
+      119
+    ]
+  },
+  {
+    "building_id": 30,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      638,
+      20,
+      690,
+      56
+    ]
+  },
+  {
+    "building_id": 31,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      647,
+      54,
+      705,
+      99
+    ]
+  },
+  {
+    "building_id": 32,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      693,
+      2,
+      749,
+      38
+    ]
+  },
+  {
+    "building_id": 33,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      693,
+      73,
+      749,
+      120
+    ]
+  },
+  {
+    "building_id": 34,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      703,
+      102,
+      762,
+      144
+    ]
+  },
+  {
+    "building_id": 35,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      743,
+      15,
+      804,
+      57
+    ]
+  },
+  {
+    "building_id": 36,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      755,
+      121,
+      803,
+      157
+    ]
+  },
+  {
+    "building_id": 37,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      784,
+      182,
+      831,
+      221
+    ]
+  },
+  {
+    "building_id": 38,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      804,
+      15,
+      866,
+      57
+    ]
+  },
+  {
+    "building_id": 39,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      816,
+      75,
+      860,
+      114
+    ]
+  },
+  {
+    "building_id": 40,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      839,
+      157,
+      880,
+      203
+    ]
+  },
+  {
+    "building_id": 41,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      862,
+      53,
+      915,
+      96
+    ]
+  },
+  {
+    "building_id": 42,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      870,
+      169,
+      917,
+      212
+    ]
+  },
+  {
+    "building_id": 43,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      907,
+      7,
+      966,
+      52
+    ]
+  },
+  {
+    "building_id": 44,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      905,
+      107,
+      951,
+      150
+    ]
+  },
+  {
+    "building_id": 45,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      942,
+      67,
+      991,
+      107
+    ]
+  },
+  {
+    "building_id": 46,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      956,
+      179,
+      999,
+      219
+    ]
+  },
+  {
+    "building_id": 47,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      1001,
+      157,
+      1024,
+      198
+    ]
+  },
+  {
+    "building_id": 48,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      986,
+      0,
+      1024,
+      25
+    ]
+  },
+  {
+    "building_id": 49,
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "Building appears intact, part of a commercial/institutional complex unaffected by the fire.",
+    "bbox": [
+      0,
+      574,
+      110,
+      692
+    ]
+  },
+  {
+    "building_id": 50,
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "Building appears intact, part of a commercial/institutional complex unaffected by the fire.",
+    "bbox": [
+      12,
+      703,
+      62,
+      742
+    ]
+  },
+  {
+    "building_id": 51,
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "Building appears intact, part of a commercial/institutional complex unaffected by the fire.",
+    "bbox": [
+      47,
+      753,
+      97,
+      810
+    ]
+  },
+  {
+    "building_id": 52,
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "Building appears intact, part of a commercial/institutional complex unaffected by the fire.",
+    "bbox": [
+      88,
+      771,
+      140,
+      792
+    ]
+  },
+  {
+    "building_id": 53,
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "Building appears intact, part of a commercial/institutional complex unaffected by the fire.",
+    "bbox": [
+      116,
+      804,
+      212,
+      878
+    ]
+  },
+  {
+    "building_id": 54,
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "Building appears intact, part of a commercial/institutional complex unaffected by the fire.",
+    "bbox": [
+      128,
+      882,
+      172,
+      918
+    ]
+  },
+  {
+    "building_id": 55,
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "Building appears intact, part of a commercial/institutional complex unaffected by the fire.",
+    "bbox": [
+      152,
+      922,
+      189,
+      971
+    ]
+  },
+  {
+    "building_id": 56,
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "Building appears intact, part of a commercial/institutional complex unaffected by the fire.",
+    "bbox": [
+      155,
+      966,
+      189,
+      999
+    ]
+  },
+  {
+    "building_id": 57,
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "Building appears intact, part of a commercial/institutional complex unaffected by the fire.",
+    "bbox": [
+      36,
+      925,
+      90,
+      991
+    ]
+  },
+  {
+    "building_id": 58,
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "Building appears intact, part of a commercial/institutional complex unaffected by the fire.",
+    "bbox": [
+      6,
+      873,
+      56,
+      915
+    ]
+  },
+  {
+    "building_id": 59,
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "Building appears intact, part of a commercial/institutional complex unaffected by the fire.",
+    "bbox": [
+      6,
+      822,
+      56,
+      867
+    ]
+  },
+  {
+    "building_id": 60,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      165,
+      237,
+      203,
+      275
+    ]
+  },
+  {
+    "building_id": 61,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      181,
+      298,
+      222,
+      335
+    ]
+  },
+  {
+    "building_id": 62,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      223,
+      226,
+      260,
+      265
+    ]
+  },
+  {
+    "building_id": 63,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      203,
+      332,
+      252,
+      370
+    ]
+  },
+  {
+    "building_id": 64,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      247,
+      280,
+      287,
+      317
+    ]
+  },
+  {
+    "building_id": 65,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      287,
+      268,
+      323,
+      303
+    ]
+  },
+  {
+    "building_id": 66,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      267,
+      412,
+      308,
+      442
+    ]
+  },
+  {
+    "building_id": 67,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      247,
+      446,
+      287,
+      477
+    ]
+  },
+  {
+    "building_id": 68,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      224,
+      497,
+      274,
+      545
+    ]
+  },
+  {
+    "building_id": 69,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      262,
+      532,
+      312,
+      574
+    ]
+  },
+  {
+    "building_id": 70,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      272,
+      502,
+      323,
+      532
+    ]
+  },
+  {
+    "building_id": 71,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      316,
+      360,
+      364,
+      396
+    ]
+  },
+  {
+    "building_id": 72,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      308,
+      472,
+      355,
+      513
+    ]
+  },
+  {
+    "building_id": 73,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      326,
+      429,
+      368,
+      461
+    ]
+  },
+  {
+    "building_id": 74,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      334,
+      388,
+      381,
+      428
+    ]
+  },
+  {
+    "building_id": 75,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      347,
+      303,
+      388,
+      342
+    ]
+  },
+  {
+    "building_id": 76,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      345,
+      237,
+      392,
+      279
+    ]
+  },
+  {
+    "building_id": 77,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      357,
+      189,
+      404,
+      226
+    ]
+  },
+  {
+    "building_id": 78,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      375,
+      276,
+      417,
+      317
+    ]
+  },
+  {
+    "building_id": 79,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      378,
+      319,
+      417,
+      360
+    ]
+  },
+  {
+    "building_id": 80,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      379,
+      361,
+      419,
+      399
+    ]
+  },
+  {
+    "building_id": 81,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      390,
+      421,
+      437,
+      466
+    ]
+  },
+  {
+    "building_id": 82,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      392,
+      471,
+      442,
+      509
+    ]
+  },
+  {
+    "building_id": 83,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      409,
+      234,
+      452,
+      277
+    ]
+  },
+  {
+    "building_id": 84,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      421,
+      281,
+      467,
+      323
+    ]
+  },
+  {
+    "building_id": 85,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      419,
+      325,
+      469,
+      369
+    ]
+  },
+  {
+    "building_id": 86,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      409,
+      372,
+      457,
+      408
+    ]
+  },
+  {
+    "building_id": 87,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      447,
+      420,
+      497,
+      464
+    ]
+  },
+  {
+    "building_id": 88,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      457,
+      466,
+      502,
+      505
+    ]
+  },
+  {
+    "building_id": 89,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      448,
+      521,
+      492,
+      555
+    ]
+  },
+  {
+    "building_id": 90,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      482,
+      545,
+      529,
+      582
+    ]
+  },
+  {
+    "building_id": 91,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      488,
+      381,
+      532,
+      420
+    ]
+  },
+  {
+    "building_id": 92,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      483,
+      332,
+      532,
+      375
+    ]
+  },
+  {
+    "building_id": 93,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      492,
+      281,
+      539,
+      321
+    ]
+  },
+  {
+    "building_id": 94,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      504,
+      230,
+      553,
+      270
+    ]
+  },
+  {
+    "building_id": 95,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      538,
+      280,
+      583,
+      319
+    ]
+  },
+  {
+    "building_id": 96,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      528,
+      324,
+      578,
+      362
+    ]
+  },
+  {
+    "building_id": 97,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      527,
+      371,
+      574,
+      408
+    ]
+  },
+  {
+    "building_id": 98,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      532,
+      412,
+      582,
+      452
+    ]
+  },
+  {
+    "building_id": 99,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      516,
+      497,
+      563,
+      538
+    ]
+  },
+  {
+    "building_id": 100,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      549,
+      472,
+      597,
+      508
+    ]
+  },
+  {
+    "building_id": 101,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      566,
+      521,
+      617,
+      560
+    ]
+  },
+  {
+    "building_id": 102,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      579,
+      396,
+      622,
+      432
+    ]
+  },
+  {
+    "building_id": 103,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      577,
+      355,
+      625,
+      393
+    ]
+  },
+  {
+    "building_id": 104,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      566,
+      276,
+      617,
+      317
+    ]
+  },
+  {
+    "building_id": 105,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      591,
+      222,
+      638,
+      259
+    ]
+  },
+  {
+    "building_id": 106,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      602,
+      276,
+      650,
+      314
+    ]
+  },
+  {
+    "building_id": 107,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      611,
+      322,
+      655,
+      358
+    ]
+  },
+  {
+    "building_id": 108,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      610,
+      377,
+      653,
+      409
+    ]
+  },
+  {
+    "building_id": 109,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      617,
+      431,
+      663,
+      467
+    ]
+  },
+  {
+    "building_id": 110,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      636,
+      482,
+      680,
+      521
+    ]
+  },
+  {
+    "building_id": 111,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      629,
+      521,
+      679,
+      558
+    ]
+  },
+  {
+    "building_id": 112,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      628,
+      563,
+      672,
+      597
+    ]
+  },
+  {
+    "building_id": 113,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      611,
+      657,
+      652,
+      693
+    ]
+  },
+  {
+    "building_id": 114,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      641,
+      616,
+      687,
+      650
+    ]
+  },
+  {
+    "building_id": 115,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      647,
+      574,
+      694,
+      614
+    ]
+  },
+  {
+    "building_id": 116,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      653,
+      654,
+      699,
+      695
+    ]
+  },
+  {
+    "building_id": 117,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      665,
+      203,
+      712,
+      246
+    ]
+  },
+  {
+    "building_id": 118,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      673,
+      273,
+      722,
+      314
+    ]
+  },
+  {
+    "building_id": 119,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      693,
+      230,
+      742,
+      270
+    ]
+  },
+  {
+    "building_id": 120,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      678,
+      319,
+      727,
+      355
+    ]
+  },
+  {
+    "building_id": 121,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      689,
+      360,
+      735,
+      396
+    ]
+  },
+  {
+    "building_id": 122,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      701,
+      654,
+      755,
+      737
+    ]
+  },
+  {
+    "building_id": 123,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      688,
+      740,
+      745,
+      783
+    ]
+  },
+  {
+    "building_id": 124,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      725,
+      400,
+      770,
+      439
+    ]
+  },
+  {
+    "building_id": 125,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      708,
+      442,
+      755,
+      482
+    ]
+  },
+  {
+    "building_id": 126,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      727,
+      506,
+      775,
+      542
+    ]
+  },
+  {
+    "building_id": 127,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      720,
+      563,
+      765,
+      600
+    ]
+  },
+  {
+    "building_id": 128,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      735,
+      617,
+      783,
+      657
+    ]
+  },
+  {
+    "building_id": 129,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      742,
+      663,
+      789,
+      703
+    ]
+  },
+  {
+    "building_id": 130,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      757,
+      708,
+      804,
+      750
+    ]
+  },
+  {
+    "building_id": 131,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      748,
+      773,
+      796,
+      816
+    ]
+  },
+  {
+    "building_id": 132,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      784,
+      770,
+      831,
+      810
+    ]
+  },
+  {
+    "building_id": 133,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      784,
+      715,
+      834,
+      750
+    ]
+  },
+  {
+    "building_id": 134,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      773,
+      566,
+      821,
+      603
+    ]
+  },
+  {
+    "building_id": 135,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      770,
+      513,
+      816,
+      549
+    ]
+  },
+  {
+    "building_id": 136,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      763,
+      417,
+      812,
+      452
+    ]
+  },
+  {
+    "building_id": 137,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      743,
+      311,
+      792,
+      350
+    ]
+  },
+  {
+    "building_id": 138,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      791,
+      269,
+      839,
+      310
+    ]
+  },
+  {
+    "building_id": 139,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      796,
+      319,
+      846,
+      358
+    ]
+  },
+  {
+    "building_id": 140,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      804,
+      362,
+      854,
+      401
+    ]
+  },
+  {
+    "building_id": 141,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      816,
+      409,
+      869,
+      447
+    ]
+  },
+  {
+    "building_id": 142,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      825,
+      467,
+      874,
+      502
+    ]
+  },
+  {
+    "building_id": 143,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      829,
+      515,
+      878,
+      552
+    ]
+  },
+  {
+    "building_id": 144,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      846,
+      563,
+      892,
+      597
+    ]
+  },
+  {
+    "building_id": 145,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      859,
+      608,
+      905,
+      649
+    ]
+  },
+  {
+    "building_id": 146,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      862,
+      663,
+      908,
+      703
+    ]
+  },
+  {
+    "building_id": 147,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      866,
+      707,
+      915,
+      750
+    ]
+  },
+  {
+    "building_id": 148,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      894,
+      755,
+      946,
+      804
+    ]
+  },
+  {
+    "building_id": 149,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      917,
+      708,
+      966,
+      747
+    ]
+  },
+  {
+    "building_id": 150,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      924,
+      650,
+      968,
+      687
+    ]
+  },
+  {
+    "building_id": 151,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      907,
+      603,
+      952,
+      638
+    ]
+  },
+  {
+    "building_id": 152,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      914,
+      555,
+      960,
+      592
+    ]
+  },
+  {
+    "building_id": 153,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      929,
+      508,
+      977,
+      545
+    ]
+  },
+  {
+    "building_id": 154,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      932,
+      451,
+      982,
+      487
+    ]
+  },
+  {
+    "building_id": 155,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      965,
+      532,
+      1004,
+      563
+    ]
+  },
+  {
+    "building_id": 156,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      968,
+      598,
+      1009,
+      638
+    ]
+  },
+  {
+    "building_id": 157,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      978,
+      650,
+      1024,
+      690
+    ]
+  },
+  {
+    "building_id": 158,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      991,
+      702,
+      1024,
+      742
+    ]
+  },
+  {
+    "building_id": 159,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      993,
+      755,
+      1024,
+      792
+    ]
+  },
+  {
+    "building_id": 160,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      966,
+      831,
+      1017,
+      874
+    ]
+  },
+  {
+    "building_id": 161,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      962,
+      877,
+      1014,
+      915
+    ]
+  },
+  {
+    "building_id": 162,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      960,
+      919,
+      1014,
+      960
+    ]
+  },
+  {
+    "building_id": 163,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      959,
+      960,
+      1012,
+      999
+    ]
+  },
+  {
+    "building_id": 164,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      889,
+      810,
+      936,
+      847
+    ]
+  },
+  {
+    "building_id": 165,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      892,
+      852,
+      942,
+      891
+    ]
+  },
+  {
+    "building_id": 166,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      892,
+      896,
+      942,
+      936
+    ]
+  },
+  {
+    "building_id": 167,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      892,
+      940,
+      939,
+      977
+    ]
+  },
+  {
+    "building_id": 168,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      892,
+      982,
+      939,
+      1024
+    ]
+  },
+  {
+    "building_id": 169,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      804,
+      822,
+      854,
+      857
+    ]
+  },
+  {
+    "building_id": 170,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      806,
+      866,
+      856,
+      903
+    ]
+  },
+  {
+    "building_id": 171,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      804,
+      915,
+      856,
+      952
+    ]
+  },
+  {
+    "building_id": 172,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      803,
+      956,
+      854,
+      995
+    ]
+  },
+  {
+    "building_id": 173,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      763,
+      991,
+      804,
+      1024
+    ]
+  },
+  {
+    "building_id": 174,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      705,
+      960,
+      752,
+      999
+    ]
+  },
+  {
+    "building_id": 175,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      655,
+      922,
+      703,
+      962
+    ]
+  },
+  {
+    "building_id": 176,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      655,
+      873,
+      703,
+      915
+    ]
+  },
+  {
+    "building_id": 177,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      652,
+      825,
+      701,
+      867
+    ]
+  },
+  {
+    "building_id": 178,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      595,
+      819,
+      647,
+      874
+    ]
+  },
+  {
+    "building_id": 179,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      586,
+      891,
+      638,
+      936
+    ]
+  },
+  {
+    "building_id": 180,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      602,
+      942,
+      650,
+      977
+    ]
+  },
+  {
+    "building_id": 181,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      588,
+      982,
+      634,
+      1024
+    ]
+  },
+  {
+    "building_id": 182,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      542,
+      991,
+      583,
+      1024
+    ]
+  },
+  {
+    "building_id": 183,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      504,
+      991,
+      547,
+      1024
+    ]
+  },
+  {
+    "building_id": 184,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      506,
+      960,
+      552,
+      991
+    ]
+  },
+  {
+    "building_id": 185,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      506,
+      896,
+      552,
+      936
+    ]
+  },
+  {
+    "building_id": 186,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      506,
+      847,
+      552,
+      889
+    ]
+  },
+  {
+    "building_id": 187,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      458,
+      850,
+      502,
+      887
+    ]
+  },
+  {
+    "building_id": 188,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      458,
+      903,
+      502,
+      940
+    ]
+  },
+  {
+    "building_id": 189,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      461,
+      951,
+      506,
+      988
+    ]
+  },
+  {
+    "building_id": 190,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      423,
+      956,
+      467,
+      991
+    ]
+  },
+  {
+    "building_id": 191,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      426,
+      905,
+      471,
+      940
+    ]
+  },
+  {
+    "building_id": 192,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      426,
+      853,
+      471,
+      889
+    ]
+  },
+  {
+    "building_id": 193,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      363,
+      765,
+      404,
+      804
+    ]
+  },
+  {
+    "building_id": 194,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      366,
+      817,
+      412,
+      874
+    ]
+  },
+  {
+    "building_id": 195,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      362,
+      900,
+      410,
+      939
+    ]
+  },
+  {
+    "building_id": 196,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      360,
+      956,
+      408,
+      997
+    ]
+  },
+  {
+    "building_id": 197,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      308,
+      707,
+      355,
+      747
+    ]
+  },
+  {
+    "building_id": 198,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      314,
+      760,
+      362,
+      808
+    ]
+  },
+  {
+    "building_id": 199,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      308,
+      897,
+      357,
+      937
+    ]
+  },
+  {
+    "building_id": 200,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      308,
+      946,
+      357,
+      988
+    ]
+  },
+  {
+    "building_id": 201,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      291,
+      626,
+      335,
+      663
+    ]
+  },
+  {
+    "building_id": 202,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      288,
+      672,
+      332,
+      708
+    ]
+  },
+  {
+    "building_id": 203,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      280,
+      810,
+      321,
+      857
+    ]
+  },
+  {
+    "building_id": 204,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      277,
+      894,
+      323,
+      936
+    ]
+  },
+  {
+    "building_id": 205,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      287,
+      946,
+      334,
+      987
+    ]
+  },
+  {
+    "building_id": 206,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      226,
+      891,
+      269,
+      936
+    ]
+  },
+  {
+    "building_id": 207,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      222,
+      946,
+      269,
+      988
+    ]
+  },
+  {
+    "building_id": 208,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      212,
+      703,
+      258,
+      747
+    ]
+  },
+  {
+    "building_id": 209,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      203,
+      621,
+      252,
+      662
+    ]
+  },
+  {
+    "building_id": 210,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      190,
+      755,
+      235,
+      792
+    ]
+  },
+  {
+    "building_id": 211,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      210,
+      804,
+      257,
+      847
+    ]
+  },
+  {
+    "building_id": 212,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      228,
+      866,
+      274,
+      903
+    ]
+  },
+  {
+    "building_id": 213,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      248,
+      905,
+      292,
+      942
+    ]
+  },
+  {
+    "building_id": 214,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      245,
+      951,
+      292,
+      988
+    ]
+  },
+  {
+    "building_id": 215,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      257,
+      982,
+      303,
+      1024
+    ]
+  },
+  {
+    "building_id": 216,
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building reduced to ash and rubble, clear footprint visible.",
+    "bbox": [
+      297,
+      991,
+      339,
+      1024
+    ]
+  }
+]

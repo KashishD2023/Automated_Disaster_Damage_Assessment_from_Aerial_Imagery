@@ -91,8 +91,8 @@ Rules:
 def main():
     detector = DamageDetector()
 
-    pre_image = "./data/santa_rosa_demo/pre/santa-rosa-wildfire_00000089_pre_disaster.png"
-    post_image = "./data/santa_rosa_demo/post/santa-rosa-wildfire_00000089_post_disaster.png"
+    pre_image = "./data/santa_rosa_demo/pre/santa-rosa-wildfire_00000012_pre_disaster.png"
+    post_image = "./data/santa_rosa_demo/post/santa-rosa-wildfire_00000012_post_disaster.png"
 
     print(f"Analyzing damage for image pair...\n")
 

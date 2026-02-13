@@ -1,162 +1,191 @@
 import streamlit as st
-import folium
 import json
-from streamlit.components.v1 import html
+import os
+import glob
+from PIL import Image, ImageDraw, ImageFont
+from ai_damage_detector import DamageDetector
 
 # PAGE CONFIGURATION
 st.set_page_config(layout="wide", page_title="Disaster Assessment AI")
 
-# TITLE & HEADER
-st.title("🌋 Project Fuego: Guatemala Damage Assessment")
-st.markdown("""
-**Status:** Connected to VLM Pipeline  
-**Disaster:** Volcán de Fuego, Guatemala  
-**Data Source:** xView2 / FEMA Labels
-""")
+# COLOR MAPPING (RGB tuples for PIL)
+DAMAGE_COLOR = {
+    "no-damage": (0, 255, 0),
+    "minor-damage": (255, 255, 0),
+    "major-damage": (255, 165, 0),
+    "destroyed": (255, 0, 0),
+    "un-classified": (128, 128, 128),
+}
 
+DAMAGE_FILL = {
+    "no-damage": (0, 255, 0, 60),
+    "minor-damage": (255, 255, 0, 60),
+    "major-damage": (255, 165, 0, 60),
+    "destroyed": (255, 0, 0, 60),
+    "un-classified": (128, 128, 128, 60),
+}
 
-# --- 1. LOAD THE MAP DATA ---
-@st.cache_data
-def load_data():
-    file_path = "./data/ai_santa_rosa_damage.geojson"  # CHANGED
+# TITLE
+st.title("🌋 Project Fuego: Disaster Damage Assessment")
+st.markdown("**Powered by** Gemini 2.5 Flash | **Data:** xView2 Satellite Imagery")
 
-    try:
-        with open(file_path, 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        st.error(f"⚠️ Could not find {file_path}. Did you run 'convert_to_geojson.py'?")
-        return None
+# --- 1. IMAGE PAIR SELECTION ---
+st.subheader("📂 Select Image Pair")
 
+PRE_DIR = "./data/santa_rosa_demo/pre"
+POST_DIR = "./data/santa_rosa_demo/post"
 
-data = load_data()
+post_images = sorted(glob.glob(os.path.join(POST_DIR, "*_post_disaster.png")))
+available_pairs = []
 
-# --- 2. BUILD THE MAP ---
-col1, col2 = st.columns([3, 1])
+for post_path in post_images:
+    filename = os.path.basename(post_path)
+    base_name = filename.replace("_post_disaster.png", "")
+    pre_path = os.path.join(PRE_DIR, f"{base_name}_pre_disaster.png")
+    if os.path.exists(pre_path):
+        available_pairs.append({"name": base_name, "pre": pre_path, "post": post_path})
 
-with col1:
-    st.subheader("Aerial Damage Analysis")
+if not available_pairs:
+    st.error("⚠️ No valid image pairs found in data/santa_rosa_demo/")
+    st.stop()
 
-    # Add zoom level selector
-    zoom_preset = st.radio(
-        "View:",
-        ["Overview (all buildings)", "Close-up (detailed view)"],
-        horizontal=True
-    )
+selected_name = st.selectbox(
+    f"Choose an image pair ({len(available_pairs)} available):",
+    [p["name"] for p in available_pairs],
+)
+selected_pair = next(p for p in available_pairs if p["name"] == selected_name)
 
-    if data and len(data['features']) > 0:
-        # Calculate bounds
-        all_lats = []
-        all_lons = []
+# Show pre/post side by side
+col_pre, col_post = st.columns(2)
+with col_pre:
+    st.image(selected_pair["pre"], caption="PRE-disaster", use_column_width=True)
+with col_post:
+    st.image(selected_pair["post"], caption="POST-disaster", use_column_width=True)
 
-        for feature in data['features']:
-            if feature['geometry']['type'] == 'Polygon':
-                coords = feature['geometry']['coordinates'][0]
-                for lon, lat in coords:
-                    all_lats.append(lat)
-                    all_lons.append(lon)
+# --- 2. RUN AI ANALYSIS ---
+st.divider()
 
-        center_lat = sum(all_lats) / len(all_lats)
-        center_lon = sum(all_lons) / len(all_lons)
+if "results_cache" not in st.session_state:
+    st.session_state.results_cache = {}
 
-        # Set zoom based on selection
-        if zoom_preset == "Overview (all buildings)":
-            zoom_level = 12
-        else:
-            zoom_level = 17
+analyze_btn = st.button("🔍 Analyze Damage with AI", type="primary", use_container_width=True)
 
-        # Create map
-        m = folium.Map(
-            location=[center_lat, center_lon],
-            zoom_start=zoom_level,
-            tiles="OpenStreetMap"
-        )
+if analyze_btn:
+    with st.spinner("🧠 Running Gemini 2.5 Flash analysis... (15-30 seconds)"):
+        try:
+            detector = DamageDetector()
+            predictions = detector.analyze_damage(selected_pair["pre"], selected_pair["post"])
+            st.session_state.results_cache[selected_name] = predictions
+            st.success(f"✅ Found {len(predictions)} buildings!")
+        except Exception as e:
+            st.error(f"❌ Error: {e}")
 
-        # Add all buildings with thicker borders for visibility
-        for feature in data['features']:
-            coords = feature['geometry']['coordinates']
-            color = feature['properties']['color']
-            damage = feature['properties']['damage']
-            image_id = feature['properties']['image_id']
+# --- 3. DISPLAY RESULTS ---
+predictions = st.session_state.results_cache.get(selected_name)
 
-            if feature['geometry']['type'] == 'Polygon':
-                locations = [(lat, lon) for lon, lat in coords[0]]
-            else:
-                continue
-
-            folium.Polygon(
-                locations=locations,
-                color='black',
-                weight=2,  # Thicker border for visibility
-                fill=True,
-                fillColor=color,
-                fillOpacity=0.7,  # More opaque
-                popup=f"<b>Damage:</b> {damage}<br><b>Image:</b> {image_id}"
-            ).add_to(m)
-
-        # Add a legend
-        legend_html = '''
-        <div style="position: fixed; 
-                    bottom: 50px; right: 50px; width: 180px; height: 160px; 
-                    background-color: white; border:2px solid grey; z-index:9999; 
-                    font-size:14px; padding: 10px">
-        <p style="margin:0; font-weight:bold;">Damage Legend</p>
-        <p style="margin:5px 0;"><span style="color:#00ff00;">█</span> No Damage</p>
-        <p style="margin:5px 0;"><span style="color:#ffff00;">█</span> Minor Damage</p>
-        <p style="margin:5px 0;"><span style="color:#ffa500;">█</span> Major Damage</p>
-        <p style="margin:5px 0;"><span style="color:#ff0000;">█</span> Destroyed</p>
-        <p style="margin:5px 0;"><span style="color:#808080;">█</span> Unclassified</p>
-        </div>
-        '''
-        m.get_root().html.add_child(folium.Element(legend_html))
-
-    else:
-        #-122.7534731377982,
-        #38.50148499983604
-        #m = folium.Map(location=[14.47, -90.88], zoom_start=15, tiles="OpenStreetMap")
-        m = folium.Map(location=[-122.7534731377982, 38.50148499983604], zoom_start=1, tiles="OpenStreetMap")
-
-    map_html = m._repr_html_()
-    html(map_html, height=600)
-
-    st.info(
-        "💡 Tip: Use the + button on the map to zoom in and see individual buildings. Click 'Close-up' above for a detailed view.")
-
-# --- 3. BUILD THE CHATBOT (Right Column) ---
-with col2:
-    st.subheader("💬 AI Assistant")
-
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-    if prompt := st.chat_input("Ask about the damage..."):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
-        response = "I am analyzing the map... Based on the current view, I detect several buildings with 'Major Damage' (Orange) near the main road. The red zones indicate total destruction from the lahar flow."
-
-        st.session_state.messages.append({"role": "assistant", "content": response})
-        with st.chat_message("assistant"):
-            st.markdown(response)
-
-# --- 4. METRICS / STATS (Bottom) ---
-if data:
+if predictions:
     st.divider()
-    st.subheader("Damage Statistics")
+    st.subheader("🔎 Damage Analysis")
 
-    total_buildings = len(data['features'])
-    destroyed = sum(1 for f in data['features'] if f['properties']['damage'] == 'destroyed')
-    major = sum(1 for f in data['features'] if f['properties']['damage'] == 'major-damage')
-    minor = sum(1 for f in data['features'] if f['properties']['damage'] == 'minor-damage')
-    no_damage = sum(1 for f in data['features'] if f['properties']['damage'] == 'no-damage')
+    # Load post image and draw bboxes
+    post_img = Image.open(selected_pair["post"]).convert("RGBA")
+    img_w, img_h = post_img.size
+
+    # Create transparent overlay for filled boxes
+    overlay = Image.new("RGBA", post_img.size, (0, 0, 0, 0))
+    overlay_draw = ImageDraw.Draw(overlay)
+
+    # Draw on a copy for outlines and labels
+    outline_layer = post_img.copy()
+    draw = ImageDraw.Draw(outline_layer)
+
+    for pred in predictions:
+        bbox = pred.get("bbox", [])
+        damage = pred.get("damage", "un-classified")
+        confidence = pred.get("confidence", 0)
+        building_id = pred.get("building_id", "?")
+
+        if len(bbox) != 4:
+            continue
+
+        # bbox is in pixel coords (0-1024 from AI), scale to actual image size
+        x1 = int(bbox[0] * img_w / 1024)
+        y1 = int(bbox[1] * img_h / 1024)
+        x2 = int(bbox[2] * img_w / 1024)
+        y2 = int(bbox[3] * img_h / 1024)
+
+        color = DAMAGE_COLOR.get(damage, (128, 128, 128))
+        fill = DAMAGE_FILL.get(damage, (128, 128, 128, 60))
+
+        # Filled rectangle on overlay
+        overlay_draw.rectangle([x1, y1, x2, y2], fill=fill)
+
+        # Outline on main image
+        draw.rectangle([x1, y1, x2, y2], outline=color, width=3)
+
+        # Label
+        label = f"#{building_id} {damage} ({confidence:.0%})"
+        text_bbox = draw.textbbox((x1, y1 - 16), label)
+        draw.rectangle(text_bbox, fill=(0, 0, 0, 200))
+        draw.text((x1, y1 - 16), label, fill=color)
+
+    # Composite
+    result_img = Image.alpha_composite(outline_layer, overlay).convert("RGB")
+
+    # Show annotated image
+    st.image(result_img, caption="AI Damage Assessment", use_column_width=True)
+
+    # --- 4. LEGEND ---
+    legend_md = """
+    | Color | Damage Level |
+    |-------|-------------|
+    | 🟩 | No Damage |
+    | 🟨 | Minor Damage |
+    | 🟧 | Major Damage |
+    | 🟥 | Destroyed |
+    """
+    st.markdown(legend_md)
+
+    # --- 5. STATS ---
+    st.divider()
+    st.subheader("📊 Damage Statistics")
+
+    total = len(predictions)
+    destroyed = sum(1 for p in predictions if p.get("damage") == "destroyed")
+    major = sum(1 for p in predictions if p.get("damage") == "major-damage")
+    minor = sum(1 for p in predictions if p.get("damage") == "minor-damage")
+    no_damage = sum(1 for p in predictions if p.get("damage") == "no-damage")
 
     m1, m2, m3, m4, m5 = st.columns(5)
-    m1.metric("Total Buildings", total_buildings)
-    m2.metric("No Damage", no_damage, delta=f"{no_damage / total_buildings * 100:.0f}%", delta_color="normal")
-    m3.metric("Minor Damage", minor, delta=f"{minor / total_buildings * 100:.0f}%", delta_color="off")
-    m4.metric("Major Damage", major, delta=f"{major / total_buildings * 100:.0f}%", delta_color="off")
-    m5.metric("Destroyed", destroyed, delta=f"{destroyed / total_buildings * 100:.0f}%", delta_color="inverse")
+    m1.metric("Total Buildings", total)
+    m2.metric("No Damage", no_damage, delta=f"{no_damage / total * 100:.0f}%" if total else "0%", delta_color="normal")
+    m3.metric("Minor Damage", minor, delta=f"{minor / total * 100:.0f}%" if total else "0%", delta_color="off")
+    m4.metric("Major Damage", major, delta=f"{major / total * 100:.0f}%" if total else "0%", delta_color="off")
+    m5.metric("Destroyed", destroyed, delta=f"{destroyed / total * 100:.0f}%" if total else "0%", delta_color="inverse")
+
+    # --- 6. BUILDING DETAILS ---
+    st.divider()
+    st.subheader("🏠 Building Details")
+    for pred in predictions:
+        damage = pred.get("damage", "unknown")
+        color_hex = {
+            "no-damage": "🟩", "minor-damage": "🟨",
+            "major-damage": "🟧", "destroyed": "🟥"
+        }.get(damage, "⬜")
+
+        with st.expander(f"{color_hex} Building #{pred.get('building_id', '?')} — {damage} ({pred.get('confidence', 0):.0%})"):
+            st.write(pred.get("description", "No description available."))
+
+    # --- 7. EXPORT ---
+    st.divider()
+    st.download_button(
+        "💾 Download Raw Predictions (JSON)",
+        data=json.dumps(predictions, indent=2),
+        file_name=f"{selected_name}_predictions.json",
+        mime="application/json",
+    )
+
+elif selected_name not in st.session_state.results_cache:
+    st.info("👆 Select an image pair and click **Analyze Damage with AI** to get started.")
+else:
+    st.warning("AI returned no buildings for this image pair.")

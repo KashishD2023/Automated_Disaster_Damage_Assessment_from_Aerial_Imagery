@@ -6,25 +6,29 @@ from shapely.wkt import loads
 from shapely.geometry import mapping
 
 # COLOR MAPPING
+# Define hex codes for visualizing different damage levels on a map
 DAMAGE_COLOR = {
-    "no-damage": "#00ff00",
-    "minor-damage": "#ffff00",
-    "major-damage": "#ffa500",
-    "destroyed": "#ff0000",
-    "un-classified": "#808080"
+    "no-damage": "#00ff00",      # Green
+    "minor-damage": "#ffff00",   # Yellow
+    "major-damage": "#ffa500",   # Orange
+    "destroyed": "#ff0000",      # Red
+    "un-classified": "#808080"   # Grey
 }
 
 
 def process_all_images():
     """Process all images and create AI-predicted GeoJSON"""
 
+    # Initialize the AI model wrapper
     detector = DamageDetector()
 
+    # Define paths for input data (pre/post images, ground truth labels) and output
     PRE_DIR = "./data/santa_rosa_demo/pre"
     POST_DIR = "./data/santa_rosa_demo/post"
     LABEL_DIR = "./data/santa_rosa_demo/fema"
     OUTPUT_FILE = "./data/ai_santa_rosa_damage.geojson"
 
+    # Gather all post-disaster images to iterate through
     post_images = glob.glob(os.path.join(POST_DIR, "*_post_disaster.png"))
 
     print(f"Processing {len(post_images)} image pairs...\n")
@@ -33,12 +37,15 @@ def process_all_images():
     all_features = []
     total_buildings = 0
 
+    # Main processing loop: Iterate through each post-disaster image
     for i, post_path in enumerate(post_images, 1):
+        # Construct corresponding file paths based on naming convention
         filename = os.path.basename(post_path)
         base_name = filename.replace("_post_disaster.png", "")
         pre_path = os.path.join(PRE_DIR, f"{base_name}_pre_disaster.png")
         label_path = os.path.join(LABEL_DIR, f"{base_name}_post_disaster.json")
 
+        # Validation: Ensure the pre-disaster image exists before proceeding
         if not os.path.exists(pre_path):
             print(f"⚠️  [{i}/{len(post_images)}] Skipping {base_name} - no pre image")
             continue
@@ -46,6 +53,7 @@ def process_all_images():
         print(f"[{i}/{len(post_images)}] Processing {base_name}...")
 
         # Run AI analysis
+        # This calls the VLM (Vision Language Model) to detect damage between the two images
         try:
             ai_predictions = detector.analyze_damage(pre_path, post_path)
             print(f"  AI found {len(ai_predictions)} buildings")
@@ -53,7 +61,8 @@ def process_all_images():
             print(f"  ❌ Error: {e}")
             continue
 
-        # Load ground truth labels for coordinate mapping
+        # Load ground truth labels to get physical coordinates (polygons)
+        # The AI returns damage classes, but we need the existing geometry to map it
         if not os.path.exists(label_path):
             print(f"  ⚠️  No labels file, skipping")
             continue
@@ -64,8 +73,9 @@ def process_all_images():
         ground_truth_polygons = label_data['features']['lng_lat']
 
         # Map AI predictions to ground truth polygons
-        # Assumption: Same order (this is a simplification)
+        # Assumption: The AI model returns predictions in the same order as the ground truth polygons
         for j, ai_pred in enumerate(ai_predictions):
+            # Safety check to avoid index out of bounds if AI predicts more than exist in GT
             if j >= len(ground_truth_polygons):
                 break
 
@@ -73,9 +83,12 @@ def process_all_images():
             wkt_str = gt_polygon['wkt']
 
             try:
+                # Convert WKT (Well-Known Text) string to a Shapely geometry object
                 poly = loads(wkt_str)
+                # Convert Shapely geometry to GeoJSON format
                 geometry = mapping(poly)
 
+                # Construct the GeoJSON Feature object with AI properties
                 feature = {
                     "type": "Feature",
                     "geometry": geometry,
@@ -83,6 +96,7 @@ def process_all_images():
                         "damage": ai_pred['damage'],
                         "confidence": ai_pred.get('confidence', 0.0),
                         "description": ai_pred.get('description', ''),
+                        # Assign color based on the damage classification
                         "color": DAMAGE_COLOR.get(ai_pred['damage'], "#808080"),
                         "image_id": base_name,
                         "source": "ai_prediction"
@@ -92,16 +106,18 @@ def process_all_images():
                 total_buildings += 1
 
             except Exception as e:
+                # Skip individual polygons if geometry parsing fails
                 continue
 
         print(f"  ✓ Mapped {min(len(ai_predictions), len(ground_truth_polygons))} buildings\n")
 
-    # Create GeoJSON
+    # Create the final FeatureCollection (standard GeoJSON structure)
     feature_collection = {
         "type": "FeatureCollection",
         "features": all_features
     }
 
+    # Write the results to the output file
     with open(OUTPUT_FILE, 'w') as f:
         json.dump(feature_collection, f, indent=2)
 
@@ -110,6 +126,7 @@ def process_all_images():
     print(f"AI predictions saved to: {OUTPUT_FILE}")
 
     # Print damage summary
+    # Calculate statistics on the distribution of damage classes
     from collections import Counter
     damages = [f['properties']['damage'] for f in all_features]
     print(f"\nAI Damage Assessment Summary:")

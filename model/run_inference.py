@@ -4,7 +4,7 @@ import random
 from datetime import datetime
 
 # file paths
-CSV_INPUT = 'tiles_demo.csv'
+CSV_INPUT = '../frontend/public/demo_images/tiles_demo.csv'
 GEOJSON_OUTPUT = 'predictions_demo.geojson'
 
 # FEMA damage classifications 
@@ -61,5 +61,6 @@ def run_mock_inference():
         json.dump(output_data, f, indent=4)
     
     print(f"Success: {GEOJSON_OUTPUT} created for the Week 2 Demo.") # placeholder message for 
+
 
 run_mock_inference()

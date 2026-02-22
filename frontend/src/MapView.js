@@ -93,11 +93,40 @@ function MapView() {
 
   const mapCenter = userLoc || [tile.lat, tile.lon];
 
-  const sendMessage = () => {
+  const API_BASE =
+    process.env.REACT_APP_API_BASE?.trim() || "http://127.0.0.1:8000";
+
+  const sendMessage = async () => {
     const text = draft.trim();
     if (!text) return;
+
     setMessages((prev) => [...prev, { id: Date.now(), role: "you", text }]);
     setDraft("");
+
+    try {
+      const res = await fetch(`${API_BASE}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, session_id: null }),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || `HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, role: "bot", text: data.response },
+      ]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 2, role: "bot", text: "Error: " + err.message },
+      ]);
+    }
   };
 
   return (

@@ -1,39 +1,10 @@
-"""
-app.py
-======
-
-Streamlit web application for disaster damage assessment.
-
-This is the main UI entry point. It provides:
-    1. Image pair selection (pre/post disaster satellite tiles)
-    2. AI-powered damage classification via Gemini (through ai_damage_detector.py)
-    3. Interactive folium map with color-coded building polygons
-    4. Damage statistics dashboard
-    5. Ground truth accuracy comparison (if ground_truth/ dir exists)
-    6. Per-building detail view and JSON export
-
-RUN:
-    streamlit run app.py
-
-PREREQUISITES:
-    - GOOGLE_API_KEY environment variable set
-    - Data directory structure:
-        data/santa_rosa_demo/
-            pre/          → Pre-disaster satellite PNGs
-            post/         → Post-disaster satellite PNGs
-            fema/         → Stripped label JSONs (polygons only, no damage)
-            ground_truth/ → Original label JSONs with damage labels (for accuracy comparison)
-    - Run strip_damage_labels.py first to create the stripped/ground_truth split
-
-DEPENDENCIES:
-    streamlit, folium, streamlit-folium, shapely, Pillow, google-genai
-"""
-
 import streamlit as st
 import json
 import os
 import glob
 import folium
+from google import genai
+from google.genai import types
 from shapely.wkt import loads as wkt_loads
 from shapely.geometry import mapping
 from streamlit_folium import folium_static
@@ -402,10 +373,126 @@ if results:
     )
 
 # =============================================================================
+# SIDEBAR: AI CHATBOT
+# =============================================================================
+# Context-aware chatbot that can answer questions about the current tile's
+# damage assessment results. It receives a summary of all building classifications
+# as context so it can answer questions like:
+#   - "How many buildings are destroyed?"
+#   - "Tell me about building f41834a1"
+#   - "What percentage of buildings survived?"
+#   - "How bad is the overall damage?"
+#   - "Which buildings have minor damage?"
+
+with st.sidebar:
+    st.header("💬 Ask About Results")
+
+    # Initialize chat history in session state
+    if "chat_messages" not in st.session_state:
+        st.session_state.chat_messages = []
+
+    # Only enable chat if we have results to talk about
+    results_for_chat = st.session_state.results_cache.get(selected_name)
+
+    if results_for_chat:
+        # --- Build context summary for the AI ---
+        # This gives the chatbot all the data it needs to answer questions
+        # without re-calling the classification API.
+        total_chat = len(results_for_chat)
+        destroyed_chat = sum(1 for r in results_for_chat if r.get("damage") == "destroyed")
+        minor_chat = sum(1 for r in results_for_chat if r.get("damage") == "minor-damage")
+        no_damage_chat = sum(1 for r in results_for_chat if r.get("damage") == "no-damage")
+        unclassified_chat = sum(1 for r in results_for_chat if r.get("damage") == "un-classified")
+
+        # Build a per-building detail string (truncated if too many buildings)
+        building_details = ""
+        for r in results_for_chat[:100]:  # Cap at 100 to avoid token limits
+            building_details += (
+                f"  - UID: {r.get('uid', '?')}, "
+                f"Damage: {r.get('damage', '?')}, "
+                f"Confidence: {r.get('confidence', 0):.0%}, "
+                f"Notes: {r.get('description', 'N/A')}\n"
+            )
+        if len(results_for_chat) > 100:
+            building_details += f"  ... and {len(results_for_chat) - 100} more buildings\n"
+
+        # System context that gets prepended to every user question
+        system_context = f"""You are a disaster damage assessment assistant for Project Fuego.
+You have access to AI-classified building damage data for satellite tile: {selected_name}
+
+DAMAGE SUMMARY:
+- Total buildings analyzed: {total_chat}
+- No damage: {no_damage_chat} ({no_damage_chat/total_chat*100:.1f}%)
+- Minor damage: {minor_chat} ({minor_chat/total_chat*100:.1f}%)
+- Destroyed: {destroyed_chat} ({destroyed_chat/total_chat*100:.1f}%)
+- Un-classified (API failures): {unclassified_chat} ({unclassified_chat/total_chat*100:.1f}%)
+
+INDIVIDUAL BUILDING DATA:
+{building_details}
+
+Answer questions about the damage assessment results clearly and concisely.
+If asked about a specific building, look up its UID in the data above.
+If asked about overall damage, use the summary statistics.
+You can also provide insights, recommendations for emergency response, or explain what the damage levels mean.
+Keep answers focused and helpful. Use numbers and percentages when relevant."""
+
+        # Display chat history
+        for msg in st.session_state.chat_messages:
+            with st.chat_message(msg["role"]):
+                st.write(msg["content"])
+
+        # Chat input
+        user_question = st.chat_input("Ask about the damage results...")
+
+        if user_question:
+            # Add user message to history
+            st.session_state.chat_messages.append({"role": "user", "content": user_question})
+            with st.chat_message("user"):
+                st.write(user_question)
+
+            # Build conversation for Gemini
+            # Include system context + full chat history for multi-turn conversation
+            try:
+                api_key = os.getenv('GOOGLE_API_KEY')
+                client = genai.Client(api_key=api_key)
+
+                # Build the messages list with context
+                gemini_contents = [system_context]
+                for msg in st.session_state.chat_messages:
+                    gemini_contents.append(f"{msg['role'].upper()}: {msg['content']}")
+
+                response = client.models.generate_content(
+                    model='gemini-3-pro-preview',
+                    contents=gemini_contents,
+                )
+
+                assistant_reply = response.text
+
+                # Add assistant response to history
+                st.session_state.chat_messages.append({"role": "assistant", "content": assistant_reply})
+                with st.chat_message("assistant"):
+                    st.write(assistant_reply)
+
+            except Exception as e:
+                error_msg = f"Chat error: {e}"
+                st.session_state.chat_messages.append({"role": "assistant", "content": error_msg})
+                with st.chat_message("assistant"):
+                    st.error(error_msg)
+
+        # Clear chat button
+        if st.session_state.chat_messages:
+            if st.button("🗑️ Clear Chat"):
+                st.session_state.chat_messages = []
+                st.rerun()
+
+    else:
+        st.info("Run an analysis first to enable the chatbot. It can answer questions about the damage results.")
+
+# =============================================================================
 # NO RESULTS STATE
 # =============================================================================
 # Shown when no analysis has been run yet or the AI returned empty results.
-elif selected_name not in st.session_state.results_cache:
+if not results and selected_name not in st.session_state.results_cache:
     st.info("👆 Select an image pair and click **Analyze Damage with AI** to get started.")
-else:
+elif not results:
     st.warning("AI returned no results for this image pair.")

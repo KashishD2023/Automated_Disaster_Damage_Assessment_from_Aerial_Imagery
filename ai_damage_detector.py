@@ -69,6 +69,7 @@ class DamageDetector:
                 raise ValueError("Please set GOOGLE_API_KEY environment variable")
 
         # Initialize the Google GenAI client
+        self.model = os.getenv('MODEL_NAME', 'gemini-3-pro-preview')
         self.client = genai.Client(api_key=api_key)
 
     def _call_gemini(self, contents, model='gemini-3-pro-preview', retries=5):
@@ -91,6 +92,7 @@ class DamageDetector:
         Raises:
             Exception: If all retry attempts are exhausted.
         """
+        model = model or self.model
         for attempt in range(retries + 1):
             try:
                 # Make the API call to Gemini
@@ -163,7 +165,7 @@ class DamageDetector:
         Returns:
             list: Dicts with "uid", "damage", "confidence", "description" for each building.
         """
-
+        model = model or self.model
         # Build a human-readable list of building locations for the prompt
         building_list = ""
         for b in buildings_info:
@@ -248,7 +250,7 @@ Return ONLY a JSON array (no markdown, no explanation):
                 - "description" (str): Brief text description of observed damage
         """
         from shapely.wkt import loads as wkt_loads
-
+        model = model or self.model
         # =====================================================================
         # STEP 1: Load the stripped label JSON
         # =====================================================================

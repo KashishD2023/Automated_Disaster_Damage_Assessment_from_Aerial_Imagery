@@ -1,0 +1,79 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -95.36,
+                            29.76
+                        ],
+                        [
+                            -95.35,
+                            29.76
+                        ],
+                        [
+                            -95.35,
+                            29.75
+                        ],
+                        [
+                            -95.36,
+                            29.75
+                        ],
+                        [
+                            -95.36,
+                            29.76
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "tile_id": 1,
+                "damage_class": "MAJOR",
+                "confidence": 0.74,
+                "explanation": "Model identified MAJOR based on structural variance.",
+                "timestamp": "2026-02-16T00:16:49.902924"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -95.36,
+                            29.76
+                        ],
+                        [
+                            -95.35,
+                            29.76
+                        ],
+                        [
+                            -95.35,
+                            29.75
+                        ],
+                        [
+                            -95.36,
+                            29.75
+                        ],
+                        [
+                            -95.36,
+                            29.76
+                        ]
+                    ]
+                ]
+            },
+            "properties": {
+                "tile_id": 2,
+                "damage_class": "NO DAMAGE",
+                "confidence": 0.89,
+                "explanation": "Model identified NO DAMAGE based on structural variance.",
+                "timestamp": "2026-02-16T00:16:49.903220"
+            }
+        }
+    ]
+}

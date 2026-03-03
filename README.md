@@ -145,3 +145,7 @@ docker compose run fuego python strip_damage_labels.py
 | Data | xView2 satellite imagery |
 | Geo Processing | Shapely (WKT polygon parsing) |
 | Containerization | Docker |
+=======
+Automated_Disaster_Damage_Assessment_from_Aerial_Imagery
+Professor Dinc
+

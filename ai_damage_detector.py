@@ -36,6 +36,7 @@ ENVIRONMENT:
 """
 
 from google import genai
+
 from google.genai import types
 import json
 import os
@@ -69,7 +70,7 @@ class DamageDetector:
                 raise ValueError("Please set GOOGLE_API_KEY environment variable")
 
         # Initialize the Google GenAI client
-        self.model = os.getenv('MODEL_NAME', 'gemini-3-pro-preview')
+        self.model = os.getenv('MODEL_NAME', 'gemini-3.1-pro-preview')
         self.client = genai.Client(api_key=api_key)
 
     def _call_gemini(self, contents, model='gemini-3-pro-preview', retries=5):

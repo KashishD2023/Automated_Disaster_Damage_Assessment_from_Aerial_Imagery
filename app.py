@@ -3,6 +3,15 @@ import json
 import os
 import glob
 import folium
+from pathlib import Path
+
+# Load chatbot question types (Person 6 documentation)
+QUESTIONS_PATH = Path("docs/docs/chatbot_questions.md")
+
+try:
+    CHATBOT_QUESTION_TYPES = QUESTIONS_PATH.read_text(encoding="utf-8") if QUESTIONS_PATH.exists() else ""
+except Exception:
+    CHATBOT_QUESTION_TYPES = ""
 from google import genai
 from google.genai import types
 from shapely.wkt import loads as wkt_loads

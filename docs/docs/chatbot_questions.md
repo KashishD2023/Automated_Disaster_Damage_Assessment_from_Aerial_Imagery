@@ -1,4 +1,4 @@
-# Chatbot Question Types – Volcano Damage Assessment
+# Chatbot Question Types - Santa Rosa Wildfire Damage Assessment
 
 ## Purpose
 The chatbot will allow users to ask questions about predicted damage caused by a volcano.

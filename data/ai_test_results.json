@@ -1,0 +1,1034 @@
+[
+  {
+    "uid": "f41834a1-4012-4f7a-b2e9-7b194dfa66d0",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building and surrounding vegetation are completely gone, replaced by a field of light-colored rubble and ash."
+  },
+  {
+    "uid": "6e3ad4b4-3488-4365-b02d-ec94c582d755",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building and the large tree next to it are no longer visible, replaced by extensive rubble and debris."
+  },
+  {
+    "uid": "6a815e8c-9424-4558-8433-073e549e8392",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building with the reddish roof and all surrounding green areas are completely eradicated, leaving only rubble."
+  },
+  {
+    "uid": "15729a9d-87be-470e-9626-0fa1763aab65",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The structure seen in the pre-image is entirely absent in the post-image, replaced by light-colored debris."
+  },
+  {
+    "uid": "8787deba-4868-4120-838e-ca2ba4477b6a",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Multiple buildings and dense vegetation are gone, with the entire area converted to uniform rubble and ash."
+  },
+  {
+    "uid": "79fbda36-3977-427d-99fd-5d383de36432",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Both buildings and the surrounding green landscape are replaced by vast stretches of rubble."
+  },
+  {
+    "uid": "21a27d5b-34d3-4c53-80c1-23d559d2c9f2",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building and its immediate surroundings are completely obliterated, leaving only a rubble field."
+  },
+  {
+    "uid": "53a5138a-7847-476e-989c-07f68cedd38c",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Buildings and all vegetation are removed, showing a complete transformation to a debris-filled landscape."
+  },
+  {
+    "uid": "bed695f9-687f-41e3-a5fd-990d79a3a6d4",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The buildings and green areas are completely replaced by light-colored rubble, indicating total destruction."
+  },
+  {
+    "uid": "afdb5393-2ba5-4077-8f4f-557ed4020d0c",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "All visible structures and vegetation are gone, with the area now covered in uniform rubble and ash."
+  },
+  {
+    "uid": "4d98fcb5-dafe-4fe0-8427-1f4ea6f09602",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely gone, replaced by a large area of rubble and debris. The surrounding area is also severely affected."
+  },
+  {
+    "uid": "46d0f72c-450b-479c-9550-032c409e8762",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building has been completely destroyed, leaving only a footprint of rubble and disturbed ground."
+  },
+  {
+    "uid": "40cae32a-e3b0-4361-b6c8-67ec42697d39",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is entirely collapsed and replaced by rubble. The adjacent pool area also shows significant damage and debris."
+  },
+  {
+    "uid": "0dfba5e1-ebd8-4f20-8eab-83074dcfdf9f",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The primary building is completely gone, replaced by debris. The adjacent structure is also severely damaged, and the pool appears filled with rubble."
+  },
+  {
+    "uid": "e79a7833-81db-4057-bf4f-c0fca9a1ad23",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building has been flattened, leaving a clear area of light-colored rubble where it once stood."
+  },
+  {
+    "uid": "57987f4b-69cc-4107-bb96-ff605b732981",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Multiple structures in the area, including the identified building, are completely destroyed and replaced by extensive rubble. The pool is also damaged."
+  },
+  {
+    "uid": "9b2d21d7-972c-497d-a0f0-350befb22277",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building and the adjacent pool are both obliterated, with the area now showing disturbed earth and debris."
+  },
+  {
+    "uid": "2f4bedba-7d3a-43ac-a3d9-1ae791bcb803",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely destroyed, leaving an area of rubble and disturbed ground amidst the remaining trees."
+  },
+  {
+    "uid": "c441d4f3-3d24-4311-b1c4-f37491856f08",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is entirely gone, replaced by a large patch of debris and cleared earth."
+  },
+  {
+    "uid": "783cec01-c650-4ed7-a371-28394cb43997",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building has been completely wiped out, with only rubble visible in its place."
+  },
+  {
+    "uid": "9fe5880d-092b-493c-9be5-ef8890b4e88b",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely gone in the post-disaster image, replaced by a pile of light-colored rubble."
+  },
+  {
+    "uid": "93de423c-62a8-419e-bf7d-c8f49badc220",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building structure is completely absent in the post-disaster image, with only rubble visible where it once stood."
+  },
+  {
+    "uid": "768072cc-8bbe-430f-ab50-76e180c36d24",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building has been completely destroyed, indicated by the absence of the structure and the presence of debris in its place."
+  },
+  {
+    "uid": "bd33bd48-0e01-42bf-8203-1dbd485dfcea",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is entirely removed from its location, replaced by a visible area of light-colored debris and disturbed ground."
+  },
+  {
+    "uid": "1c38d3b5-1157-4abe-9d51-a52b65ec14d8",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is no longer present; the area where it stood is covered by rubble, indicating complete destruction."
+  },
+  {
+    "uid": "0bf42825-d2a6-4078-877f-5b3c4cecc3ae",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building has been completely demolished, with only a footprint of debris remaining in the post-disaster image."
+  },
+  {
+    "uid": "cf921f3a-df19-45ae-b25a-f88643a564f2",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely gone, replaced by a widespread area of light-toned rubble and debris."
+  },
+  {
+    "uid": "ee8df354-8243-40ce-9de7-ffb2e5fbdec6",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building has been destroyed, evident by its complete disappearance and the presence of rubble or disturbed earth."
+  },
+  {
+    "uid": "21528b8b-22af-402d-9ddf-e3a163793fba",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building structure is completely gone, replaced by a clearly defined area of rubble and debris."
+  },
+  {
+    "uid": "1ae44cfa-2b3d-4cde-ab25-28ac24a9a304",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely destroyed, with only debris and disturbed ground remaining in the post-disaster image."
+  },
+  {
+    "uid": "0c8c92d5-5a3c-46df-9261-43921e1515d5",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, replaced by a large area of light-colored rubble and ash. Surrounding vegetation is also severely burnt."
+  },
+  {
+    "uid": "78a13292-bd48-448e-a9bc-c7ed4dbaa2f6",
+    "damage": "destroyed",
+    "confidence": 0.99,
+    "description": "The building is completely destroyed, with only a footprint of light-colored rubble and ash remaining. Surrounding ground is burnt."
+  },
+  {
+    "uid": "45769d53-3300-4dca-843d-c4cf89173a3d",
+    "damage": "destroyed",
+    "confidence": 0.97,
+    "description": "The building structure is no longer visible, replaced by debris and ash. The surrounding trees are heavily damaged."
+  },
+  {
+    "uid": "f9f2d840-b728-489f-8621-ec57ec6cc5e3",
+    "damage": "destroyed",
+    "confidence": 0.99,
+    "description": "The entire building is gone, leaving behind a wide area of light-colored rubble and a clear foundation outline. Vegetation is burnt."
+  },
+  {
+    "uid": "1693714f-b1a1-461e-9ae3-7147209d6102",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Both structures are completely destroyed, replaced by a circular pattern of rubble and ash. Surrounding areas are also heavily affected."
+  },
+  {
+    "uid": "70a0c1e6-547a-4bf9-87d2-793fa901b2cc",
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "The building appears identical in both images, with its roof and structure intact. Surrounding vegetation shows only minor discoloration, if any."
+  },
+  {
+    "uid": "3e411459-86a1-4a94-8ba5-13bc1484de3b",
+    "damage": "no-damage",
+    "confidence": 0.95,
+    "description": "The building's roof and structure remain completely intact and unchanged. Surrounding greenery is also consistent."
+  },
+  {
+    "uid": "f33e6bc3-7f61-4468-9a6e-b3edf02b2cb9",
+    "damage": "no-damage",
+    "confidence": 0.94,
+    "description": "The building shows no visible damage to its roof or structure. Some adjacent vegetation appears slightly drier but the building itself is intact."
+  },
+  {
+    "uid": "ae75c2eb-34da-4f75-940a-2ab67a0df239",
+    "damage": "no-damage",
+    "confidence": 0.93,
+    "description": "Both buildings maintain their original roof and structural integrity. Minor changes in vegetation color around them, but the buildings are unaffected."
+  },
+  {
+    "uid": "ba016fc5-f5a8-4800-a2db-3b690f11a9ce",
+    "damage": "no-damage",
+    "confidence": 0.94,
+    "description": "The buildings are intact with no visible damage to their roofs or structures. Some green areas show minor discoloration, but the buildings are fine."
+  },
+  {
+    "uid": "f67aeb1c-39cb-4bbe-8fab-995de195fd22",
+    "damage": "no-damage",
+    "confidence": 0.98,
+    "description": "The building's roof and structure appear identical and intact in both pre and post images, with no visible damage."
+  },
+  {
+    "uid": "2cb6a7f7-5fe2-41d5-9daa-56513b088af1",
+    "damage": "no-damage",
+    "confidence": 0.98,
+    "description": "The building's structure and roof are visibly intact and show no signs of damage in the post-disaster image."
+  },
+  {
+    "uid": "9ceede2f-e526-48a7-b022-e55a054acff9",
+    "damage": "no-damage",
+    "confidence": 0.98,
+    "description": "The building shows no visible signs of damage, with its roof and overall structure appearing identical to the pre-disaster image."
+  },
+  {
+    "uid": "28e8efe0-d324-455b-9eb9-12f02702b42d",
+    "damage": "no-damage",
+    "confidence": 0.98,
+    "description": "The building's structure and roof are intact, with no visible changes from the pre-disaster image."
+  },
+  {
+    "uid": "e138ba24-3f17-4a99-b551-71db21f2ef6c",
+    "damage": "minor-damage",
+    "confidence": 0.75,
+    "description": "The post-disaster image is severely blurry and pixelated, making it impossible to clearly assess the building's roof and structure. While not visibly destroyed, its intactness cannot be confirmed."
+  },
+  {
+    "uid": "4b64477f-ccce-4c2f-9105-e872d1ba9f98",
+    "damage": "minor-damage",
+    "confidence": 0.75,
+    "description": "The post-disaster image is extremely blurry and noisy, obscuring the building's details and preventing a clear assessment of its condition. The general footprint appears present, but no specific damage can be confirmed or ruled out."
+  },
+  {
+    "uid": "deaa7b0d-f500-4e0e-bdd3-f186544d34fc",
+    "damage": "minor-damage",
+    "confidence": 0.75,
+    "description": "The post-disaster image is very blurry and grainy, significantly hindering the ability to clearly distinguish the building's features and assess damage. It is not visibly destroyed, but its intactness cannot be confirmed."
+  },
+  {
+    "uid": "24dd85d1-4b4d-4618-a88d-84fa9bd83725",
+    "damage": "minor-damage",
+    "confidence": 0.75,
+    "description": "The post-disaster image is heavily blurred and pixelated across the building area, making it impossible to ascertain the state of the roof or structure. Not clearly destroyed, but not confirmably intact."
+  },
+  {
+    "uid": "d9bf57a1-34bd-4119-8230-47a9726a3105",
+    "damage": "minor-damage",
+    "confidence": 0.75,
+    "description": "The post-disaster image is extremely blurry and pixelated, making the building's condition indiscernible. Due to the lack of clear visual information, definite 'no-damage' cannot be asserted."
+  },
+  {
+    "uid": "6c241232-6b46-4f0f-8aae-a0a4ca2d9370",
+    "damage": "minor-damage",
+    "confidence": 0.75,
+    "description": "The post-disaster image is highly pixelated and blurry, rendering the building indistinguishable and preventing any confident assessment of damage or intactness."
+  },
+  {
+    "uid": "aa10c2ef-6cd8-4abb-a2e7-194d21b470d9",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, replaced by a pile of light-colored rubble. The surrounding vegetation is also severely damaged."
+  },
+  {
+    "uid": "f73d9501-6277-421e-9d88-fb41ef86354c",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely demolished, with only rubble remaining in its place. The landscape around it is also devastated."
+  },
+  {
+    "uid": "58bfe412-ae1b-4b85-b6db-013d83d7af2c",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been completely destroyed, leaving only a footprint of debris and rubble. Surrounding greenery is absent."
+  },
+  {
+    "uid": "54eb9f00-3ce8-430e-94de-2f4de9096548",
+    "damage": "destroyed",
+    "confidence": 0.97,
+    "description": "The building structure is completely gone, replaced by scattered debris. A nearby blue feature is also severely impacted."
+  },
+  {
+    "uid": "d3bee9da-f0ce-40fb-b145-2418483c5eb7",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is entirely demolished, leaving behind rubble. The adjacent swimming pool appears damaged and filled with debris."
+  },
+  {
+    "uid": "76634922-57d4-4660-b24b-3c2d3cebc3ef",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely wiped out, with only a light-colored debris field remaining. The surrounding area is also extensively damaged."
+  },
+  {
+    "uid": "e64bd774-b4cc-4baa-934f-e92788566a2a",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been reduced to rubble. The neighboring blue structure is visible but appears damaged, and greenery is gone."
+  },
+  {
+    "uid": "54ae0b3b-0f6c-43b5-a068-0fd428d1b81f",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely destroyed, leaving only a rubble imprint. The adjacent blue feature is also heavily compromised."
+  },
+  {
+    "uid": "2ffefdbc-b60c-4cbb-a684-78568adeeb80",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, replaced by a patch of debris. The nearby blue structure is discolored and likely damaged."
+  },
+  {
+    "uid": "308092b2-3be0-4d24-b3f6-686b4717a35c",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been entirely destroyed, with a significant amount of rubble in its place. All surrounding vegetation is gone."
+  },
+  {
+    "uid": "6c42dd22-52d1-4e7c-bd09-39fd7252b802",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely collapsed and replaced by rubble and debris. No recognizable structure remains."
+  },
+  {
+    "uid": "eb308829-aa3b-4252-a366-a67532bc9659",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building structure is entirely gone, leaving only scattered debris and disturbed ground."
+  },
+  {
+    "uid": "9e34a306-5ac3-48be-908b-45d8be2073b2",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been completely obliterated, replaced by a large area of light-colored rubble and debris."
+  },
+  {
+    "uid": "2852c0b6-974c-4028-84d7-bded9bb17caf",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely demolished, with only rubble and disturbed earth remaining in its place."
+  },
+  {
+    "uid": "ec37f00c-727f-4389-9ee2-8baea3d74b07",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been completely destroyed, leaving a pile of light-colored debris where it once stood."
+  },
+  {
+    "uid": "ec363c91-b337-4a06-a189-141afc548d14",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is no longer present, replaced by rubble and severely disturbed ground conditions."
+  },
+  {
+    "uid": "ff62cc83-1b27-46fb-b634-22659ce5ab3c",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building and nearby swimming pool are completely gone, replaced by extensive rubble and debris."
+  },
+  {
+    "uid": "4efd3f7f-399c-43f6-8bda-102aba5d76e4",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been completely destroyed, leaving only a field of rubble and disturbed earth."
+  },
+  {
+    "uid": "517457d9-ecbe-4f6c-ae72-bb9fe310aea7",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is entirely demolished, with its footprint now covered in light-colored debris and rubble."
+  },
+  {
+    "uid": "24036cb8-f8b4-4862-80f5-a6ee35d7d8f5",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, replaced by rubble and highly disturbed surrounding vegetation."
+  },
+  {
+    "uid": "6777fdf3-1dab-43fd-b24d-1c0735fc4524",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely obliterated, leaving behind only a pile of rubble and debris where the structure once stood."
+  },
+  {
+    "uid": "4d4df550-c1b7-4e04-9783-f046d81e6a39",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been reduced to a heap of light-colored rubble, with no discernible structure remaining. Surrounding vegetation is also heavily impacted."
+  },
+  {
+    "uid": "6e7efab1-35c2-44c2-af76-c915da3f71c7",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, replaced by a field of debris and disturbed ground."
+  },
+  {
+    "uid": "43616e89-f73f-41c5-89a6-bc41d2a0d274",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The structure is entirely absent in the post-disaster image, replaced by a large area of pulverized material and rubble."
+  },
+  {
+    "uid": "810e2b2d-ba17-400e-b8bb-89abc6315771",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely destroyed, indicated by a large area of light-colored rubble where the structure was previously located."
+  },
+  {
+    "uid": "291f9a4a-7ff1-4ffc-8c18-8ed223716433",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building's footprint is now covered by a pile of rubble and debris, indicating complete destruction."
+  },
+  {
+    "uid": "94a35187-dd97-41c3-a9dd-c59a440ce91f",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, with only a light-colored debris field and disturbed earth remaining."
+  },
+  {
+    "uid": "bb61474d-1ef2-45c1-99cc-e24d9bc31870",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been entirely demolished, leaving behind a clear area of rubble and pulverized material."
+  },
+  {
+    "uid": "9f91381a-c224-49b7-81d9-e0728cd1f6b5",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is no longer visible, replaced by a chaotic scattering of rubble. The surrounding trees also show significant damage."
+  },
+  {
+    "uid": "9728edf6-3ded-4f15-9467-5c6f4103842e",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Both structures are completely destroyed, with their footprints now filled with light-colored rubble and debris."
+  },
+  {
+    "uid": "493cfdf1-f14f-4163-9e1d-5ef8e458a8d0",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building structure is completely gone, replaced by a pile of light-colored rubble and disturbed ground."
+  },
+  {
+    "uid": "23b20e4a-7f1c-48a4-8c0a-52f24e6e2ec2",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building has entirely collapsed, with only a large, irregular patch of light-colored debris visible where it once stood. Surrounding vegetation also appears burned."
+  },
+  {
+    "uid": "c893e43d-b910-44d3-9a48-2c9a9257e0b5",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely obliterated, replaced by a large area of light-colored rubble and scorched earth."
+  },
+  {
+    "uid": "6bc81835-0ee9-48d9-9455-cdba0b2ffb2e",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The main building is no longer present, replaced by a wide expanse of debris and rubble. An adjacent white structure also appears destroyed."
+  },
+  {
+    "uid": "95625a84-4f14-4312-95e1-670bab21fe44",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely gone, with a uniform area of light-colored rubble and brown, disturbed ground in its place."
+  },
+  {
+    "uid": "78765f86-595c-4c26-97c5-e9d1a204c1d4",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building has vanished, leaving behind a field of light-colored debris and barren ground where the structure previously stood."
+  },
+  {
+    "uid": "a8e591ea-ae6d-42b7-bfb6-41acb1a5da90",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely destroyed, reduced to rubble. The area around the previously visible swimming pool also shows signs of damage or burning."
+  },
+  {
+    "uid": "ab50bf06-a12c-4294-8a1d-f4362f8053c8",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is entirely collapsed, leaving only a large pile of debris and disturbed earth. The nearby pool area also appears affected."
+  },
+  {
+    "uid": "59ed04b0-ef8e-4e15-a092-f781ad994daf",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building and any attached structures are completely gone, replaced by widespread light-colored rubble and a cleared, possibly scorched, area."
+  },
+  {
+    "uid": "eb23d9da-d900-43f1-9b2a-8e4626acacc2",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building, including its solar panels, is entirely destroyed, evidenced by a large area of rubble. The surrounding property, including where cars were parked, is also severely damaged."
+  },
+  {
+    "uid": "f2002387-4964-4ab3-8c46-5fdcbb5d9b47",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, replaced by a pile of light-colored rubble and debris."
+  },
+  {
+    "uid": "3e4d106a-69f2-4d47-be83-79c2393c81d2",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building and adjacent structures are completely absent, replaced by rubble."
+  },
+  {
+    "uid": "1b91c8fe-0c3b-47e4-9137-d34557b49b8d",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The small building is no longer present, with the area appearing as disturbed, lighter ground."
+  },
+  {
+    "uid": "6610eab0-2add-4ef1-b4d5-62c79572e6b7",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, leaving only scattered rubble."
+  },
+  {
+    "uid": "5908378a-7de8-422d-a324-88eafe7e42cc",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The large building and surrounding features are completely replaced by rubble and debris."
+  },
+  {
+    "uid": "2dae6f70-eccf-42d1-96b4-18328b324c70",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is absent in the post-disaster image, replaced by a field of rubble."
+  },
+  {
+    "uid": "97075938-45a4-4355-be8d-f3fedef22377",
+    "damage": "destroyed",
+    "confidence": 0.97,
+    "description": "The circular structures are gone, and the area appears significantly altered and disturbed, covered in debris."
+  },
+  {
+    "uid": "fbdfca11-689e-453a-b68d-cde707d24351",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, with the area covered in light-colored rubble."
+  },
+  {
+    "uid": "8215a778-cde1-4a7b-a0c3-ddc7d983ee90",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is entirely removed, leaving behind a mound of rubble and debris."
+  },
+  {
+    "uid": "52f4e8c1-5f6a-4f49-bb0f-a81a7cb1f75d",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building and the smaller adjacent structure are completely destroyed, replaced by rubble."
+  },
+  {
+    "uid": "4274ea32-1952-4d76-abde-151f5c29c786",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, replaced by a pile of rubble and disturbed ground."
+  },
+  {
+    "uid": "0ea80eff-4247-4d49-933f-b244667c5ece",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been completely removed, with only disturbed ground and some debris visible."
+  },
+  {
+    "uid": "ef5d517d-872b-4295-81b3-3a5e3b5983eb",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is no longer present; the area is covered in disturbed earth and debris."
+  },
+  {
+    "uid": "17eceef3-8dc5-4d98-9a79-6141143e5191",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The structures seen in the pre-image are gone, replaced by debris and disturbed ground."
+  },
+  {
+    "uid": "f831d1b9-194b-43dc-af83-f013b8442ef9",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building visible in the pre-image is completely gone, leaving disturbed earth and debris."
+  },
+  {
+    "uid": "f8271c45-a64d-4b3f-9a59-e4a1241d592c",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is entirely removed, with only bare, disturbed ground remaining."
+  },
+  {
+    "uid": "a0038aff-6f28-4ede-94a1-e1c1d84bf0ed",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, replaced by light-colored rubble and disturbed earth."
+  },
+  {
+    "uid": "ebe9a478-a8ef-4260-b598-8dcc61e332b5",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is no longer present; the area is covered in light-colored debris and disturbed ground."
+  },
+  {
+    "uid": "d8cc1b5f-5cbf-4b31-aba9-57b3dcc79d11",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been completely destroyed, leaving behind a clear area of rubble and disturbed soil."
+  },
+  {
+    "uid": "de878e38-320f-41ba-ab46-52cf58810923",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The entire building structure is gone, replaced by a large spread of debris and disturbed ground."
+  },
+  {
+    "uid": "235400cf-1ff4-4a3d-aabc-0d10dc0a3025",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone, reduced to a pile of rubble and debris. The surrounding ground is also heavily disturbed."
+  },
+  {
+    "uid": "ba512a46-8ed9-45e5-b32e-c440541f1664",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The main building and the adjacent white structure are completely destroyed, replaced by rubble and debris."
+  },
+  {
+    "uid": "1c1b8317-8020-4b7b-80cf-b28699792b5d",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Both the main building and the smaller white structure are gone, with only rubble and disturbed earth remaining."
+  },
+  {
+    "uid": "4606f05f-a9a0-4764-b44d-d88ea8e0b982",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been completely destroyed, leaving behind a clear area of light-colored rubble."
+  },
+  {
+    "uid": "6aa7bc16-ddfd-4ec8-a5fc-4a96fb2c6b00",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The entire building complex is reduced to a mass of rubble and debris, with no identifiable structures remaining."
+  },
+  {
+    "uid": "f08fda6f-8a27-4087-8209-a0e956523a3b",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely destroyed, replaced by a significant pile of rubble and disturbed ground."
+  },
+  {
+    "uid": "1f113032-569b-4a65-88c3-664f13ddaf8c",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building, including both the main section and the white extension, has collapsed into a pile of rubble and exposed foundation."
+  },
+  {
+    "uid": "559d7a29-9449-4cb9-ab18-901a49fc0b69",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely gone, replaced by debris and disturbed earth, although the pre-image crop is tight."
+  },
+  {
+    "uid": "df5ec751-b4fd-4d32-966c-292f57ce3ce2",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The structure is no longer visible, replaced by rubble and discolored ground, indicating complete destruction."
+  },
+  {
+    "uid": "4440045c-ff3c-4153-9cf1-5984f83592db",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The large building is entirely demolished, leaving a significant area of rubble where it once stood."
+  },
+  {
+    "uid": "620b5459-529a-4976-8bca-9108a8a0c6d4",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely gone in the post-disaster image, replaced by a clear footprint of light-colored rubble."
+  },
+  {
+    "uid": "5993f76f-85ee-4bec-9194-28e794a0a36a",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building present in the pre-disaster image is entirely absent in the post-disaster image, replaced by a large area of light-colored debris and disturbed ground."
+  },
+  {
+    "uid": "64c9aaab-e74d-4e56-8da6-e0b026f87b24",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been completely demolished, with only a foundation footprint and scattered debris visible in the post-disaster image."
+  },
+  {
+    "uid": "244b2cf6-2c57-421c-a4b5-39a47eb612b8",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely destroyed and replaced by dark rubble and disturbed ground in the post-disaster image. Surrounding vegetation also appears damaged."
+  },
+  {
+    "uid": "f7be2681-2f34-444d-aef7-0009f7804e2e",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is entirely gone, with the area converted to rubble and disturbed earth in the post-disaster image."
+  },
+  {
+    "uid": "6d6b6acb-48a7-4828-87f6-b86d93ff373a",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely annihilated, leaving behind a clear pile of light-colored debris where it once stood."
+  },
+  {
+    "uid": "4be6f9f9-fde2-4027-a52d-643a643d14f5",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The large L-shaped building is completely missing in the post-disaster image, with the area covered in extensive rubble and disturbed earth."
+  },
+  {
+    "uid": "4820088a-c9c4-4ea0-92ba-4b22ffc34752",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is entirely absent in the post-disaster image, with only disturbed ground remaining."
+  },
+  {
+    "uid": "0ab90251-8115-44f8-8256-e61dbb1b5796",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely destroyed, replaced by dark rubble and what appears to be burnt or severely damaged vegetation in the post-disaster image."
+  },
+  {
+    "uid": "aafcc89f-321e-488f-b2df-7dbe8ef9ffee",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is completely destroyed, leaving behind a field of light-colored rubble and disturbed ground. Surrounding trees also show damage."
+  },
+  {
+    "uid": "ff2a2820-2f78-4615-9da7-bf9646a1d46d",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is completely gone, replaced by a pile of light-colored rubble."
+  },
+  {
+    "uid": "a89b3112-ee95-4d09-bc9e-984df757fa49",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is completely gone, replaced by a pile of light-colored rubble. The surrounding area is heavily disturbed."
+  },
+  {
+    "uid": "08a334a7-c512-4187-87f5-d5fdb3de2f13",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is completely gone, replaced by light-colored debris and disturbed ground."
+  },
+  {
+    "uid": "3513565d-b386-45b4-bc8e-6d5eb5aeafda",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is completely gone, replaced by a pile of light-colored rubble and disturbed vegetation."
+  },
+  {
+    "uid": "65e5263f-f3e8-47a8-89b7-19b9ee7d7391",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is completely gone, replaced by extensive light-colored rubble and disturbed ground."
+  },
+  {
+    "uid": "d7ec4b29-0ce9-43c2-8651-8c6316f53a5e",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is completely gone, replaced by a large area of light-colored rubble."
+  },
+  {
+    "uid": "dd37683a-5e21-4eca-a08a-704b10c7f560",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The previous structure is completely gone, and the area is heavily disturbed with debris and altered ground cover."
+  },
+  {
+    "uid": "ead74e51-38a0-4e3e-a63f-790727a10aae",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The small structure is completely gone, replaced by disturbed, lighter ground."
+  },
+  {
+    "uid": "8ec310d2-9185-4efc-93b5-fe19df9de4b7",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is completely gone, replaced by a mix of light-colored rubble and disturbed ground."
+  },
+  {
+    "uid": "39b45e09-c88f-474d-b60f-82263f129ced",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is completely gone, replaced by a disturbed area of lighter soil and debris."
+  },
+  {
+    "uid": "8202bf10-c023-4f27-98e3-f14fcf916d49",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building completely collapsed, reduced to a pile of rubble."
+  },
+  {
+    "uid": "b7af94a3-f31e-41ea-afbe-6f40b888e296",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is gone, replaced by a scattered field of debris and rubble."
+  },
+  {
+    "uid": "8ff01578-cb75-4978-a69c-dfd9677b4fad",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building has been completely destroyed, leaving only rubble and scattered fragments."
+  },
+  {
+    "uid": "052a7057-150e-4bf3-92fa-f16198fca039",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is completely obliterated, replaced by a chaotic pile of light-colored rubble."
+  },
+  {
+    "uid": "20fc41cf-7f44-4675-9425-7dc7ba97bea3",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The structure is entirely gone, with only light-colored rubble visible in its place."
+  },
+  {
+    "uid": "5640882b-cfb1-421c-a16e-0e5b0af96365",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building has been completely flattened, showing only debris and bare ground."
+  },
+  {
+    "uid": "b10534fa-beb6-4085-a17d-9b5e8ca76cce",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building is entirely absent, replaced by a light, mottled area of ground where it once stood."
+  },
+  {
+    "uid": "f8123fec-dbb8-4c07-b3df-56cfe43d2f05",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is completely destroyed, replaced by a substantial amount of scattered rubble and debris."
+  },
+  {
+    "uid": "67d8d218-a53d-402f-9263-521c995d0a67",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "The building's structure is completely gone, leaving a wide area of light-colored rubble."
+  },
+  {
+    "uid": "39c256ac-515b-4767-bb4b-07478c1dd375",
+    "damage": "destroyed",
+    "confidence": 0.98,
+    "description": "Building is entirely removed, with only a patch of lighter-colored rubble visible."
+  },
+  {
+    "uid": "6a69c941-6df3-4037-938a-dcc1179fd01c",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely gone, replaced by a debris field. Surrounding vegetation is also removed."
+  },
+  {
+    "uid": "c7ed636b-6647-435c-93d9-69e5a6d6ca81",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is no longer visible, replaced by a field of rubble. The landscape is severely altered."
+  },
+  {
+    "uid": "880b496d-24ec-4352-bdef-4ad8d3cc6cdc",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building and a nearby structure are completely gone, leaving bare, disturbed earth."
+  },
+  {
+    "uid": "5a65a158-8cdc-44c5-b397-b29dabaa17c8",
+    "damage": "no-damage",
+    "confidence": 0.9,
+    "description": "The building's roof structure appears identical in both pre and post images, with no visible damage."
+  },
+  {
+    "uid": "cb1b584c-0b49-424e-8588-494cfa684247",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely obliterated, leaving only disturbed ground. Dense surrounding vegetation is also removed."
+  },
+  {
+    "uid": "5c31633f-28c0-4858-b322-d2e926d7854c",
+    "damage": "no-damage",
+    "confidence": 0.9,
+    "description": "The building's roof remains intact and structurally unchanged. Minor discoloration may be present in the surrounding area but not to the building itself."
+  },
+  {
+    "uid": "6d574ace-29ba-489c-97bf-849e1273f14d",
+    "damage": "no-damage",
+    "confidence": 0.9,
+    "description": "The building and surrounding landscape appear largely unchanged, with no visible structural damage."
+  },
+  {
+    "uid": "c6b07706-5e90-4477-8feb-5ffe7ffff15e",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Multiple buildings are completely gone, replaced by a large area of rubble and bare earth. Significant deforestation is also evident."
+  },
+  {
+    "uid": "56806032-f79d-45c1-adb5-09dd30db8588",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely destroyed, leaving an empty, discolored patch of ground. Surrounding greenery is also gone."
+  },
+  {
+    "uid": "e7b6c2a9-649a-49cc-96c1-a98690e83303",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The buildings are entirely missing, replaced by a wide area of debris and barren land. Most trees are also removed."
+  },
+  {
+    "uid": "ed62549c-b94d-442a-92a0-810536283231",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Building and surrounding vegetation are completely gone, replaced by debris and bare ground."
+  },
+  {
+    "uid": "78677b68-c4aa-439d-90bd-0e6c5b935103",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Building is completely collapsed and replaced by debris. The swimming pool is still discernible but the surroundings are heavily damaged."
+  },
+  {
+    "uid": "5126216c-487f-48ea-bd29-1eebbab3270b",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Building, vehicle, and surrounding trees are gone, replaced by extensive rubble and scorched earth."
+  },
+  {
+    "uid": "9717ea28-344b-499a-b63d-8ab67135e2ad",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Multiple structures in the pre-image are completely gone in the post-image, replaced by debris."
+  },
+  {
+    "uid": "28edf0cc-5fa7-40ec-b746-039b6d63f846",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely destroyed, with only debris remaining where it once stood. The adjacent pond also appears affected."
+  },
+  {
+    "uid": "f1e122cf-87df-439b-951e-110af9b0cc4c",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Building and surrounding green areas are completely destroyed and covered in brown/grey debris."
+  },
+  {
+    "uid": "4ccc9d9b-420e-4353-a936-270c65e05986",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The area where the building and dense vegetation were is now barren and covered in debris."
+  },
+  {
+    "uid": "d16ba08b-54d5-4feb-9349-80da106c2ed5",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Multiple buildings visible in the pre-image are completely eradicated, replaced by extensive debris and signs of burning."
+  },
+  {
+    "uid": "416b3ebb-c0db-47ef-b9a7-c07bd0ff2232",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is entirely gone, and the area is covered in debris. Surrounding vegetation is also destroyed."
+  },
+  {
+    "uid": "70062bad-b59b-453a-9a09-83fd7c9f7374",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "Building is no longer present; the entire area is covered in uniform debris, indicating complete destruction."
+  },
+  {
+    "uid": "3a40e14f-2d33-41b1-9385-f5aa66f7250a",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building is completely gone in the post-disaster image, replaced by a dark, irregular patch, suggesting complete destruction or impact site."
+  },
+  {
+    "uid": "39771086-ca96-482f-b7a9-cac3c5ed90f2",
+    "damage": "destroyed",
+    "confidence": 0.95,
+    "description": "The building visible in the pre-disaster image is completely absent in the post-disaster image, with the area appearing flattened and indistinguishable from the surroundings."
+  }
+]

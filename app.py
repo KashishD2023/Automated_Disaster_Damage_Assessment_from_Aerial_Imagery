@@ -19,7 +19,11 @@ from ai_damage_detector import DamageDetector
 # =============================================================================
 QUESTIONS_PATH = Path("docs/docs/chatbot_questions.md")
 try:
-    CHATBOT_QUESTION_TYPES = QUESTIONS_PATH.read_text(encoding="utf-8") if QUESTIONS_PATH.exists() else ""
+    CHATBOT_QUESTION_TYPES = (
+        QUESTIONS_PATH.read_text(encoding="utf-8")
+        if QUESTIONS_PATH.exists()
+        else ""
+    )
 except Exception:
     CHATBOT_QUESTION_TYPES = ""
 
@@ -27,6 +31,62 @@ except Exception:
 # PAGE CONFIGURATION
 # =============================================================================
 st.set_page_config(layout="wide", page_title="Disaster Assessment AI")
+
+# =============================================================================
+# GLOBAL STYLES
+# =============================================================================
+st.markdown(
+    """
+    <style>
+    .thinking-bubbles {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 0;
+        min-height: 24px;
+    }
+
+    .thinking-bubbles span {
+        width: 8px;
+        height: 8px;
+        background-color: #9aa0a6;
+        border-radius: 50%;
+        display: inline-block;
+        animation: thinking-bounce 1.4s infinite ease-in-out both;
+    }
+
+    .thinking-bubbles span:nth-child(1) {
+        animation-delay: -0.32s;
+    }
+
+    .thinking-bubbles span:nth-child(2) {
+        animation-delay: -0.16s;
+    }
+
+    .thinking-bubbles span:nth-child(3) {
+        animation-delay: 0s;
+    }
+
+    @keyframes thinking-bounce {
+        0%, 80%, 100% {
+            transform: scale(0.6);
+            opacity: 0.4;
+        }
+        40% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# =============================================================================
+# MODEL CONFIG
+# =============================================================================
+DEFAULT_CHAT_MODEL = "gemini-3-pro-preview"
+FAST_CHAT_MODEL = "gemini-3-flash"
 
 # =============================================================================
 # DAMAGE LEVEL COLOR MAPPING
@@ -67,12 +127,14 @@ def load_available_pairs():
         label_path = os.path.join(FEMA_DIR, f"{base_name}_post_disaster.json")
 
         if os.path.exists(pre_path) and os.path.exists(label_path):
-            pairs.append({
-                "name": base_name,
-                "pre": pre_path,
-                "post": post_path,
-                "label": label_path,
-            })
+            pairs.append(
+                {
+                    "name": base_name,
+                    "pre": pre_path,
+                    "post": post_path,
+                    "label": label_path,
+                }
+            )
 
     return pairs
 
@@ -116,13 +178,15 @@ def build_combined_tile_data(pairs):
         if not bounds:
             continue
 
-        all_tiles.append({
-            "name": pair["name"],
-            "pre": pair["pre"],
-            "post": pair["post"],
-            "label": pair["label"],
-            "bounds": bounds,
-        })
+        all_tiles.append(
+            {
+                "name": pair["name"],
+                "pre": pair["pre"],
+                "post": pair["post"],
+                "label": pair["label"],
+                "bounds": bounds,
+            }
+        )
 
     return all_tiles
 
@@ -160,6 +224,7 @@ def make_single_interactive_map(all_tiles, selected_name, layer_mode):
     ).add_to(m)
 
     overlay_path = selected_tile["post"] if layer_mode == "Post Disaster" else selected_tile["pre"]
+
     try:
         image_url = image_to_data_url(overlay_path)
         ImageOverlay(
@@ -181,7 +246,16 @@ def make_single_interactive_map(all_tiles, selected_name, layer_mode):
 # HEADER
 # =============================================================================
 st.title("🔥 Santa Rosa Wildfire: Disaster Damage Assessment")
-st.markdown("**Powered by** Gemini 3 Pro | **Data:** xView2 Satellite Imagery")
+st.markdown("**Powered by** Gemini | **Data:** xView2 Satellite Imagery")
+
+# =============================================================================
+# SESSION STATE SETUP
+# =============================================================================
+if "results_cache" not in st.session_state:
+    st.session_state.results_cache = {}
+
+if "chat_messages" not in st.session_state:
+    st.session_state.chat_messages = []
 
 # =============================================================================
 # LOAD TILES
@@ -189,7 +263,9 @@ st.markdown("**Powered by** Gemini 3 Pro | **Data:** xView2 Satellite Imagery")
 available_pairs = load_available_pairs()
 
 if not available_pairs:
-    st.error("⚠️ No valid image pairs with labels found. Ensure data/santa_rosa_demo/ has pre/, post/, and fema/ folders.")
+    st.error(
+        "⚠️ No valid image pairs with labels found. Ensure data/santa_rosa_demo/ has pre/, post/, and fema/ folders."
+    )
     st.stop()
 
 all_tiles = build_combined_tile_data(available_pairs)
@@ -219,21 +295,17 @@ with open(selected_pair["label"], "r") as f:
 building_count = len(label_data.get("features", {}).get("lng_lat", []))
 st.info(f"📍 {building_count} building polygons found in selected tile")
 
-if "results_cache" not in st.session_state:
-    st.session_state.results_cache = {}
-
 results = st.session_state.results_cache.get(selected_name)
 
 if not results:
     layer_mode = st.radio(
-    "Map Layer",
-    ["Pre Disaster", "Post Disaster"],
-    horizontal=True,
-    key="main_map_layer_mode",
+        "Map Layer",
+        ["Pre Disaster", "Post Disaster"],
+        horizontal=True,
+        key="main_map_layer_mode",
     )
 
     st.subheader("🗺 Interactive Tile Map")
-
     main_map = make_single_interactive_map(all_tiles, selected_name, layer_mode)
     st_folium(main_map, width=1400, height=700)
 
@@ -242,15 +314,12 @@ if not results:
 # =============================================================================
 st.divider()
 
-if "results_cache" not in st.session_state:
-    st.session_state.results_cache = {}
-
 with st.form("analysis_form"):
     batch_size = st.selectbox(
         "Batch size (buildings per API call):",
         [25, 50, 85, 170],
         index=2,
-        help="Larger = fewer API calls. 85 recommended for Pro."
+        help="Larger = fewer API calls. 85 recommended for Pro.",
     )
     analyze_btn = st.form_submit_button("🔍 Analyze Damage with AI", type="primary")
 
@@ -273,15 +342,18 @@ if analyze_btn:
         progress_bar.progress(1.0)
         progress_text.text("")
         st.success(f"✅ Classified {len(results)} buildings!")
+
     except Exception as e:
         st.error(f"❌ Error: {e}")
         import traceback
         st.code(traceback.format_exc())
 
+# refresh after analysis
+results = st.session_state.results_cache.get(selected_name)
+
 # =============================================================================
 # SECTION 3: DAMAGE ASSESSMENT MAP
 # =============================================================================
-
 if results:
     st.divider()
     st.subheader("🗺️ Damage Assessment Map")
@@ -311,19 +383,24 @@ if results:
             poly_lngs.extend(lngs)
             poly_lats.extend(lats)
 
-            ai_result = uid_to_damage.get(uid, {
-                "damage": "un-classified",
-                "confidence": 0,
-                "description": "Not classified",
-            })
+            ai_result = uid_to_damage.get(
+                uid,
+                {
+                    "damage": "un-classified",
+                    "confidence": 0,
+                    "description": "Not classified",
+                },
+            )
 
-            features_for_map.append({
-                "geom": geom,
-                "uid": uid,
-                "damage": ai_result["damage"],
-                "confidence": ai_result["confidence"],
-                "description": ai_result["description"],
-            })
+            features_for_map.append(
+                {
+                    "geom": geom,
+                    "uid": uid,
+                    "damage": ai_result["damage"],
+                    "confidence": ai_result["confidence"],
+                    "description": ai_result["description"],
+                }
+            )
         except Exception:
             continue
 
@@ -356,7 +433,10 @@ if results:
     ).add_to(m)
 
     selected_bounds = get_bounds_from_label(selected_pair["label"])
-    bg_image_path = selected_pair["post"] if damage_bg_mode == "Pre Disaster" else selected_pair["pre"]
+    bg_image_path = (
+        selected_pair["pre"] if damage_bg_mode == "Pre Disaster" else selected_pair["post"]
+    )
+
     if selected_bounds:
         try:
             image_url = image_to_data_url(bg_image_path)
@@ -398,14 +478,16 @@ if results:
     m.fit_bounds([[min(poly_lats), min(poly_lngs)], [max(poly_lats), max(poly_lngs)]])
     st_folium(m, width=1400, height=650)
 
-    st.markdown("""
-    | Color | Damage Level |
-    |-------|-------------|
-    | 🟩 | No Damage |
-    | 🟨 | Minor Damage |
-    | 🟥 | Destroyed |
-    | ⬜ | Un-classified |
-    """)
+    st.markdown(
+        """
+        | Color | Damage Level |
+        |-------|-------------|
+        | 🟩 | No Damage |
+        | 🟨 | Minor Damage |
+        | 🟥 | Destroyed |
+        | ⬜ | Un-classified |
+        """
+    )
 
     st.divider()
     st.subheader("📊 Damage Statistics")
@@ -418,12 +500,31 @@ if results:
 
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Total Buildings", total)
-    c2.metric("No Damage", no_damage, delta=f"{no_damage/total*100:.0f}%" if total else "0%", delta_color="normal")
-    c3.metric("Minor Damage", minor, delta=f"{minor/total*100:.0f}%" if total else "0%", delta_color="off")
-    c4.metric("Destroyed", destroyed, delta=f"{destroyed/total*100:.0f}%" if total else "0%", delta_color="inverse")
+    c2.metric(
+        "No Damage",
+        no_damage,
+        delta=f"{no_damage/total*100:.0f}%" if total else "0%",
+        delta_color="normal",
+    )
+    c3.metric(
+        "Minor Damage",
+        minor,
+        delta=f"{minor/total*100:.0f}%" if total else "0%",
+        delta_color="off",
+    )
+    c4.metric(
+        "Destroyed",
+        destroyed,
+        delta=f"{destroyed/total*100:.0f}%" if total else "0%",
+        delta_color="inverse",
+    )
 
     if unclassified > 0:
-        st.metric("Un-classified", unclassified, delta=f"{unclassified/total*100:.0f}%" if total else "0%")
+        st.metric(
+            "Un-classified",
+            unclassified,
+            delta=f"{unclassified/total*100:.0f}%" if total else "0%",
+        )
 
     gt_path = os.path.join(GROUND_TRUTH_DIR, f"{selected_name}_post_disaster.json")
     if os.path.exists(gt_path):
@@ -458,7 +559,11 @@ if results:
 
         if total_compared > 0:
             accuracy = correct / total_compared * 100
-            st.metric("Overall Accuracy", f"{accuracy:.1f}%", delta=f"{correct}/{total_compared} correct")
+            st.metric(
+                "Overall Accuracy",
+                f"{accuracy:.1f}%",
+                delta=f"{correct}/{total_compared} correct",
+            )
 
             with st.expander("Confusion Details"):
                 for (gt, ai), count in sorted(confusion.items(), key=lambda x: -x[1]):
@@ -501,14 +606,17 @@ if results:
 with st.sidebar:
     st.header("💬 Ask About Results")
 
+    think_fast = st.toggle(
+        "⚡ Think Faster",
+        value=False,
+        help="Uses a faster model with shorter responses.",
+    )
+
     with st.expander("Suggested chatbot questions (Santa Rosa wildfire)", expanded=False):
         if CHATBOT_QUESTION_TYPES.strip():
             st.markdown(CHATBOT_QUESTION_TYPES)
         else:
             st.info("Could not load docs/docs/chatbot_questions.md")
-
-    if "chat_messages" not in st.session_state:
-        st.session_state.chat_messages = []
 
     results_for_chat = st.session_state.results_cache.get(selected_name)
 
@@ -575,31 +683,52 @@ RULES:
 
         if user_question:
             st.session_state.chat_messages.append({"role": "user", "content": user_question})
+
             with st.chat_message("user"):
                 st.write(user_question)
 
             try:
                 api_key = os.getenv("GOOGLE_API_KEY")
+                if not api_key:
+                    raise ValueError("GOOGLE_API_KEY is not set in your environment.")
+
                 client = genai.Client(api_key=api_key)
 
                 gemini_contents = [system_context]
                 for msg in st.session_state.chat_messages:
                     gemini_contents.append(f"{msg['role'].upper()}: {msg['content']}")
 
-                response = client.models.generate_content(
-                    model="gemini-3-pro-preview",
-                    contents=gemini_contents,
-                )
-
-                assistant_reply = response.text
-                st.session_state.chat_messages.append({"role": "assistant", "content": assistant_reply})
+                model_name = FAST_CHAT_MODEL if think_fast else DEFAULT_CHAT_MODEL
 
                 with st.chat_message("assistant"):
+                    thinking_placeholder = st.empty()
+                    thinking_placeholder.markdown(
+                        """
+                        <div class="thinking-bubbles">
+                            <span></span><span></span><span></span>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+
+                    response = client.models.generate_content(
+                        model=model_name,
+                        contents=gemini_contents,
+                    )
+
+                    assistant_reply = response.text if getattr(response, "text", None) else "No response returned."
+                    thinking_placeholder.empty()
                     st.write(assistant_reply)
+
+                st.session_state.chat_messages.append(
+                    {"role": "assistant", "content": assistant_reply}
+                )
 
             except Exception as e:
                 error_msg = f"Chat error: {e}"
-                st.session_state.chat_messages.append({"role": "assistant", "content": error_msg})
+                st.session_state.chat_messages.append(
+                    {"role": "assistant", "content": error_msg}
+                )
                 with st.chat_message("assistant"):
                     st.error(error_msg)
 
@@ -607,6 +736,7 @@ RULES:
             if st.button("🗑️ Clear Chat"):
                 st.session_state.chat_messages = []
                 st.rerun()
+
     else:
         st.info("Run an analysis first to enable the chatbot. It can answer questions about the damage results.")
 

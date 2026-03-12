@@ -3,17 +3,19 @@ import json
 import os
 import glob
 import folium
+import base64
+from io import BytesIO
 from pathlib import Path
+from PIL import Image
 
 from google import genai
-from google.genai import types
 from shapely.wkt import loads as wkt_loads
-from shapely.geometry import mapping
-from streamlit_folium import folium_static
+from streamlit_folium import st_folium
+from folium.raster_layers import ImageOverlay
 from ai_damage_detector import DamageDetector
 
 # =============================================================================
-# LOAD PERSON 6 CHATBOT QUESTION TYPES (from docs)
+# LOAD PERSON 6 CHATBOT QUESTION TYPES
 # =============================================================================
 QUESTIONS_PATH = Path("docs/docs/chatbot_questions.md")
 try:
@@ -29,17 +31,13 @@ st.set_page_config(layout="wide", page_title="Disaster Assessment AI")
 # =============================================================================
 # DAMAGE LEVEL COLOR MAPPING
 # =============================================================================
-# These colors are used for both the folium map polygons and the UI legend.
-# Only 3 damage levels + un-classified (for failed API calls).
-# Matches the xView2/FEMA ground truth label vocabulary.
 DAMAGE_COLOR = {
-    "no-damage": "#00ff00",      # Green
-    "minor-damage": "#ffff00",   # Yellow
-    "destroyed": "#ff0000",      # Red
-    "un-classified": "#808080",  # Gray (API failure or missing result)
+    "no-damage": "#00ff00",
+    "minor-damage": "#ffff00",
+    "destroyed": "#ff0000",
+    "un-classified": "#808080",
 }
 
-# Fill opacity for the colored polygon overlays on the map
 DAMAGE_FILL_OPACITY = {
     "no-damage": 0.5,
     "minor-damage": 0.5,
@@ -48,63 +46,196 @@ DAMAGE_FILL_OPACITY = {
 }
 
 # =============================================================================
+# DATA DIRECTORIES
+# =============================================================================
+PRE_DIR = "./data/santa_rosa_demo/pre"
+POST_DIR = "./data/santa_rosa_demo/post"
+FEMA_DIR = "./data/santa_rosa_demo/fema"
+GROUND_TRUTH_DIR = "./data/santa_rosa_demo/ground_truth"
+
+# =============================================================================
+# HELPERS
+# =============================================================================
+def load_available_pairs():
+    post_images = sorted(glob.glob(os.path.join(POST_DIR, "*_post_disaster.png")))
+    pairs = []
+
+    for post_path in post_images:
+        filename = os.path.basename(post_path)
+        base_name = filename.replace("_post_disaster.png", "")
+        pre_path = os.path.join(PRE_DIR, f"{base_name}_pre_disaster.png")
+        label_path = os.path.join(FEMA_DIR, f"{base_name}_post_disaster.json")
+
+        if os.path.exists(pre_path) and os.path.exists(label_path):
+            pairs.append({
+                "name": base_name,
+                "pre": pre_path,
+                "post": post_path,
+                "label": label_path,
+            })
+
+    return pairs
+
+
+def get_bounds_from_label(label_path):
+    try:
+        with open(label_path, "r") as f:
+            data = json.load(f)
+
+        polygons = data.get("features", {}).get("lng_lat", [])
+        all_lats = []
+        all_lngs = []
+
+        for poly_data in polygons:
+            wkt_str = poly_data.get("wkt", "")
+            if not wkt_str:
+                continue
+
+            try:
+                geom = wkt_loads(wkt_str)
+                coords = list(geom.exterior.coords)
+                for lng, lat in coords:
+                    all_lngs.append(lng)
+                    all_lats.append(lat)
+            except Exception:
+                continue
+
+        if not all_lats or not all_lngs:
+            return None
+
+        return [[min(all_lats), min(all_lngs)], [max(all_lats), max(all_lngs)]]
+    except Exception:
+        return None
+
+
+def build_combined_tile_data(pairs):
+    all_tiles = []
+
+    for pair in pairs:
+        bounds = get_bounds_from_label(pair["label"])
+        if not bounds:
+            continue
+
+        all_tiles.append({
+            "name": pair["name"],
+            "pre": pair["pre"],
+            "post": pair["post"],
+            "label": pair["label"],
+            "bounds": bounds,
+        })
+
+    return all_tiles
+
+
+def image_to_data_url(image_path):
+    with Image.open(image_path) as img:
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        encoded = base64.b64encode(buffer.getvalue()).decode()
+        return f"data:image/png;base64,{encoded}"
+
+
+def make_single_interactive_map(all_tiles, selected_name, layer_mode):
+    selected_tile = next((t for t in all_tiles if t["name"] == selected_name), None)
+    if not selected_tile:
+        return None
+
+    south, west = selected_tile["bounds"][0]
+    north, east = selected_tile["bounds"][1]
+    center_lat = (south + north) / 2
+    center_lng = (west + east) / 2
+
+    m = folium.Map(
+        location=[center_lat, center_lng],
+        zoom_start=17,
+        tiles=None,
+    )
+
+    folium.TileLayer(
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        attr="Esri World Imagery",
+        name="Esri Satellite",
+        overlay=False,
+        control=False,
+    ).add_to(m)
+
+    overlay_path = selected_tile["post"] if layer_mode == "Post Disaster" else selected_tile["pre"]
+    try:
+        image_url = image_to_data_url(overlay_path)
+        ImageOverlay(
+            image=image_url,
+            bounds=selected_tile["bounds"],
+            opacity=0.85,
+            interactive=False,
+            cross_origin=False,
+            zindex=1,
+        ).add_to(m)
+    except Exception as e:
+        st.warning(f"Could not render {layer_mode.lower()} overlay: {e}")
+
+    m.fit_bounds(selected_tile["bounds"])
+    return m
+
+
+# =============================================================================
 # HEADER
 # =============================================================================
 st.title("🔥 Santa Rosa Wildfire: Disaster Damage Assessment")
 st.markdown("**Powered by** Gemini 3 Pro | **Data:** xView2 Satellite Imagery")
 
 # =============================================================================
-# SECTION 1: IMAGE PAIR SELECTION
+# LOAD TILES
 # =============================================================================
-# Scans the data directory for matching pre/post/label file triplets.
-# Files are matched by their base name (e.g., "santa-rosa-wildfire_00000012"):
-#   - pre/santa-rosa-wildfire_00000012_pre_disaster.png
-#   - post/santa-rosa-wildfire_00000012_post_disaster.png
-#   - fema/santa-rosa-wildfire_00000012_post_disaster.json
-st.subheader("📂 Select Image Pair")
-
-PRE_DIR = "./data/santa_rosa_demo/pre"
-POST_DIR = "./data/santa_rosa_demo/post"
-FEMA_DIR = "./data/santa_rosa_demo/fema"                 # Stripped JSONs (no damage labels)
-GROUND_TRUTH_DIR = "./data/santa_rosa_demo/ground_truth" # Original JSONs (with damage labels)
-
-# Find all post-disaster images and match them with pre images + label files
-post_images = sorted(glob.glob(os.path.join(POST_DIR, "*_post_disaster.png")))
-available_pairs = []
-
-for post_path in post_images:
-    filename = os.path.basename(post_path)
-    base_name = filename.replace("_post_disaster.png", "")
-    pre_path = os.path.join(PRE_DIR, f"{base_name}_pre_disaster.png")
-    label_path = os.path.join(FEMA_DIR, f"{base_name}_post_disaster.json")
-    if os.path.exists(pre_path) and os.path.exists(label_path):
-        available_pairs.append({
-            "name": base_name,
-            "pre": pre_path,
-            "post": post_path,
-            "label": label_path,
-        })
+available_pairs = load_available_pairs()
 
 if not available_pairs:
     st.error("⚠️ No valid image pairs with labels found. Ensure data/santa_rosa_demo/ has pre/, post/, and fema/ folders.")
     st.stop()
 
-selected_name = st.selectbox(
-    f"Choose an image pair ({len(available_pairs)} available):",
-    [p["name"] for p in available_pairs],
-)
-selected_pair = next(p for p in available_pairs if p["name"] == selected_name)
+all_tiles = build_combined_tile_data(available_pairs)
 
-col_pre, col_post = st.columns(2)
-with col_pre:
-    st.image(selected_pair["pre"], caption="PRE-disaster", use_column_width=True)
-with col_post:
-    st.image(selected_pair["post"], caption="POST-disaster", use_column_width=True)
+if not all_tiles:
+    st.error("⚠️ Could not build geographic bounds for the tiles.")
+    st.stop()
+
+# =============================================================================
+# SECTION 1: TILE SELECTION + SINGLE MAP
+# =============================================================================
+st.subheader("📂 Select a Tile")
+
+tile_names = [p["name"] for p in available_pairs]
+
+selected_name = st.selectbox(
+    f"Choose a tile ({len(tile_names)} available):",
+    tile_names,
+    index=0,
+)
+
+selected_pair = next(p for p in available_pairs if p["name"] == selected_name)
 
 with open(selected_pair["label"], "r") as f:
     label_data = json.load(f)
+
 building_count = len(label_data.get("features", {}).get("lng_lat", []))
-st.info(f"📍 {building_count} building polygons found in label file")
+st.info(f"📍 {building_count} building polygons found in selected tile")
+
+if "results_cache" not in st.session_state:
+    st.session_state.results_cache = {}
+
+results = st.session_state.results_cache.get(selected_name)
+
+if not results:
+    layer_mode = st.radio(
+    "Map Layer",
+    ["Pre Disaster", "Post Disaster"],
+    horizontal=True,
+    key="main_map_layer_mode",
+    )
+
+    st.subheader("🗺 Interactive Tile Map")
+
+    main_map = make_single_interactive_map(all_tiles, selected_name, layer_mode)
+    st_folium(main_map, width=1400, height=700)
 
 # =============================================================================
 # SECTION 2: AI ANALYSIS TRIGGER
@@ -148,9 +279,8 @@ if analyze_btn:
         st.code(traceback.format_exc())
 
 # =============================================================================
-# SECTION 3: MAP DISPLAY
+# SECTION 3: DAMAGE ASSESSMENT MAP
 # =============================================================================
-results = st.session_state.results_cache.get(selected_name)
 
 if results:
     st.divider()
@@ -165,8 +295,8 @@ if results:
         }
 
     polygons = label_data.get("features", {}).get("lng_lat", [])
-    all_lats = []
-    all_lngs = []
+    poly_lats = []
+    poly_lngs = []
     features_for_map = []
 
     for poly_data in polygons:
@@ -178,8 +308,8 @@ if results:
             coords = list(geom.exterior.coords)
             lngs = [c[0] for c in coords]
             lats = [c[1] for c in coords]
-            all_lngs.extend(lngs)
-            all_lats.extend(lats)
+            poly_lngs.extend(lngs)
+            poly_lats.extend(lats)
 
             ai_result = uid_to_damage.get(uid, {
                 "damage": "un-classified",
@@ -201,21 +331,50 @@ if results:
         st.warning("No valid polygons to display")
         st.stop()
 
-    center_lat = sum(all_lats) / len(all_lats)
-    center_lng = sum(all_lngs) / len(all_lngs)
+    center_lat = sum(poly_lats) / len(poly_lats)
+    center_lng = sum(poly_lngs) / len(poly_lngs)
+
+    damage_bg_mode = st.radio(
+        "Damage Map Background",
+        ["Pre Disaster", "Post Disaster"],
+        horizontal=True,
+        key="damage_map_bg_mode",
+    )
 
     m = folium.Map(
         location=[center_lat, center_lng],
-        zoom_start=17,
-        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        attr="Esri",
+        zoom_start=18,
+        tiles=None,
     )
+
+    folium.TileLayer(
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        attr="Esri World Imagery",
+        name="Esri Satellite",
+        overlay=False,
+        control=False,
+    ).add_to(m)
+
+    selected_bounds = get_bounds_from_label(selected_pair["label"])
+    bg_image_path = selected_pair["post"] if damage_bg_mode == "Pre Disaster" else selected_pair["pre"]
+    if selected_bounds:
+        try:
+            image_url = image_to_data_url(bg_image_path)
+            ImageOverlay(
+                image=image_url,
+                bounds=selected_bounds,
+                opacity=0.72,
+                interactive=False,
+                cross_origin=False,
+                zindex=1,
+            ).add_to(m)
+        except Exception as e:
+            st.warning(f"Could not render damage map background: {e}")
 
     for feat in features_for_map:
         damage = feat["damage"]
         color = DAMAGE_COLOR.get(damage, "#808080")
         fill_opacity = DAMAGE_FILL_OPACITY.get(damage, 0.3)
-
         poly_coords = [(lat, lng) for lng, lat in feat["geom"].exterior.coords]
 
         conf = feat.get("confidence", 0)
@@ -223,6 +382,7 @@ if results:
             conf_str = f"{conf:.0%}" if conf <= 1 else f"{conf}%"
         else:
             conf_str = str(conf)
+
         tooltip_text = f"{damage} ({conf_str}) - {feat['uid'][:8]}"
 
         folium.Polygon(
@@ -235,23 +395,18 @@ if results:
             tooltip=tooltip_text,
         ).add_to(m)
 
-    m.fit_bounds([[min(all_lats), min(all_lngs)], [max(all_lats), max(all_lngs)]])
-    folium_static(m, width=1200, height=600)
+    m.fit_bounds([[min(poly_lats), min(poly_lngs)], [max(poly_lats), max(poly_lngs)]])
+    st_folium(m, width=1400, height=650)
 
-    # ==========================================================================
-    # SECTION 4: LEGEND
-    # ==========================================================================
     st.markdown("""
     | Color | Damage Level |
     |-------|-------------|
     | 🟩 | No Damage |
     | 🟨 | Minor Damage |
     | 🟥 | Destroyed |
+    | ⬜ | Un-classified |
     """)
 
-    # ==========================================================================
-    # SECTION 5: DAMAGE STATISTICS
-    # ==========================================================================
     st.divider()
     st.subheader("📊 Damage Statistics")
 
@@ -261,15 +416,15 @@ if results:
     no_damage = sum(1 for r in results if r.get("damage") == "no-damage")
     unclassified = sum(1 for r in results if r.get("damage") == "un-classified")
 
-    m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Total Buildings", total)
-    m2.metric("No Damage", no_damage, delta=f"{no_damage/total*100:.0f}%" if total else "0%", delta_color="normal")
-    m3.metric("Minor Damage", minor, delta=f"{minor/total*100:.0f}%" if total else "0%", delta_color="off")
-    m4.metric("Destroyed", destroyed, delta=f"{destroyed/total*100:.0f}%" if total else "0%", delta_color="inverse")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Total Buildings", total)
+    c2.metric("No Damage", no_damage, delta=f"{no_damage/total*100:.0f}%" if total else "0%", delta_color="normal")
+    c3.metric("Minor Damage", minor, delta=f"{minor/total*100:.0f}%" if total else "0%", delta_color="off")
+    c4.metric("Destroyed", destroyed, delta=f"{destroyed/total*100:.0f}%" if total else "0%", delta_color="inverse")
 
-    # ==========================================================================
-    # SECTION 6: GROUND TRUTH ACCURACY COMPARISON
-    # ==========================================================================
+    if unclassified > 0:
+        st.metric("Un-classified", unclassified, delta=f"{unclassified/total*100:.0f}%" if total else "0%")
+
     gt_path = os.path.join(GROUND_TRUTH_DIR, f"{selected_name}_post_disaster.json")
     if os.path.exists(gt_path):
         st.divider()
@@ -312,9 +467,6 @@ if results:
         else:
             st.info("No comparable ground truth labels found for this tile.")
 
-    # ==========================================================================
-    # SECTION 7: PER-BUILDING DETAILS
-    # ==========================================================================
     st.divider()
     st.subheader("🏠 Building Details")
     for r in results:
@@ -323,6 +475,7 @@ if results:
             "no-damage": "🟩",
             "minor-damage": "🟨",
             "destroyed": "🟥",
+            "un-classified": "⬜",
         }.get(damage, "⬜")
 
         conf_val = r.get("confidence", 0)
@@ -334,9 +487,6 @@ if results:
         with st.expander(f"{color_hex} {r.get('uid', '?')[:12]}... — {damage} ({conf_text})"):
             st.write(r.get("description", "No description available."))
 
-    # ==========================================================================
-    # SECTION 8: JSON EXPORT
-    # ==========================================================================
     st.divider()
     st.download_button(
         "💾 Download AI Predictions (JSON)",
@@ -351,7 +501,6 @@ if results:
 with st.sidebar:
     st.header("💬 Ask About Results")
 
-    # Show suggested questions (Person 6 doc) to guide users
     with st.expander("Suggested chatbot questions (Santa Rosa wildfire)", expanded=False):
         if CHATBOT_QUESTION_TYPES.strip():
             st.markdown(CHATBOT_QUESTION_TYPES)
@@ -372,18 +521,24 @@ with st.sidebar:
 
         building_details = ""
         for r in results_for_chat[:100]:
+            conf_value = r.get("confidence", 0)
+            try:
+                conf_text = f"{float(conf_value):.0%}"
+            except Exception:
+                conf_text = str(conf_value)
+
             building_details += (
                 f"  - UID: {r.get('uid', '?')}, "
                 f"Damage: {r.get('damage', '?')}, "
-                f"Confidence: {r.get('confidence', 0):.0%}, "
+                f"Confidence: {conf_text}, "
                 f"Notes: {r.get('description', 'N/A')}\n"
             )
+
         if len(results_for_chat) > 100:
             building_details += f"  ... and {len(results_for_chat) - 100} more buildings\n"
 
-        # --- UPDATED PROMPT: includes your question types + rules + format ---
         system_context = f"""You are a disaster damage assessment assistant for the Santa Rosa wildfire project.
-You have access to AI-classified building damage data for satellite tile: {selected_name}
+You have access to AI classified building damage data for satellite tile: {selected_name}
 
 DAMAGE SUMMARY:
 - Total buildings analyzed: {total_chat}
@@ -398,21 +553,20 @@ INDIVIDUAL BUILDING DATA (up to 100 shown):
 SUPPORTED CHATBOT QUESTION TYPES (Person 6):
 {CHATBOT_QUESTION_TYPES}
 
-RESPONSE FORMAT (always follow):
-1) Answer (1–2 sentences)
-2) Evidence (counts / percentages / specific UIDs from the data)
-3) Notes (limitations, low confidence, un-classified API failures)
+RESPONSE FORMAT:
+1) Answer
+2) Evidence
+3) Notes
 
 RULES:
 - If asked for counts, include both count and percentage when possible.
-- If asked "worst affected areas", explain which damage categories dominate based on the data you have.
-- For uncertainty questions, treat confidence below 0.60 as low confidence and report how many match.
+- If asked about worst affected areas, explain which damage categories dominate based on the data you have.
+- For uncertainty questions, treat confidence below 0.60 as low confidence.
 - If asked about a specific building, look up its UID in the data above.
-- Do NOT invent building UIDs or numbers not present in the provided data.
+- Do not invent building UIDs or numbers not present in the provided data.
 - Keep answers focused and helpful.
 """
 
-        # Display chat history
         for msg in st.session_state.chat_messages:
             with st.chat_message(msg["role"]):
                 st.write(msg["content"])
@@ -439,6 +593,7 @@ RULES:
 
                 assistant_reply = response.text
                 st.session_state.chat_messages.append({"role": "assistant", "content": assistant_reply})
+
                 with st.chat_message("assistant"):
                     st.write(assistant_reply)
 
@@ -459,6 +614,6 @@ RULES:
 # NO RESULTS STATE
 # =============================================================================
 if not results and selected_name not in st.session_state.results_cache:
-    st.info("👆 Select an image pair and click **Analyze Damage with AI** to get started.")
+    st.info("👆 Select a tile and click **Analyze Damage with AI** to get started.")
 elif not results:
     st.warning("AI returned no results for this image pair.")

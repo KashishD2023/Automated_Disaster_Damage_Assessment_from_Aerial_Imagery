@@ -83,3 +83,12 @@ Chatbot responses rely on model predictions that will later be evaluated using:
 ### Week 2 Status
 This section documents the planned chatbot integration and evaluation design.  
 No backend queries or evaluation code have been implemented yet.
+No backend queries or evaluation code have been implemented yet.
+
+## Example User Questions
+
+- What percentage of buildings have minor damage in this area?
+- Which locations experienced the most severe damage?
+- How many buildings are predicted to be destroyed?
+- Are there any low-confidence predictions in this tile?
+- How do the predictions compare with FEMA labels here?

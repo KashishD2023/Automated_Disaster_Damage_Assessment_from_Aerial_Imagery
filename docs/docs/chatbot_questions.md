@@ -83,6 +83,7 @@ Chatbot responses rely on model predictions that will later be evaluated using:
 ### Week 2 Status
 This section documents the planned chatbot integration and evaluation design.  
 No backend queries or evaluation code have been implemented yet.
+No backend queries or evaluation code have been implemented yet.
 
 ## Example User Questions
 

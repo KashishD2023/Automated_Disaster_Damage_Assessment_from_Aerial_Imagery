@@ -86,7 +86,7 @@ st.markdown(
 # MODEL CONFIG
 # =============================================================================
 DEFAULT_CHAT_MODEL = "gemini-3-pro-preview"
-FAST_CHAT_MODEL = "gemini-3-flash"
+FAST_CHAT_MODEL = "gemini-3-flash-preview"
 
 # =============================================================================
 # DAMAGE LEVEL COLOR MAPPING

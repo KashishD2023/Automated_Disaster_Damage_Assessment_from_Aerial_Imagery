@@ -53,6 +53,25 @@ To stop:
 docker compose down
 ```
 
+**Potential Issues:**
+
+If a container does not close after ```docker compose down```, run the command below and see any open containers and their IDs:
+```bash
+docker ps
+```
+Run this to force remove it by container ID:
+```bash
+docker rm -f <Container ID>
+```
+Then start fresh by using ```docker compose up --build``` like normal
+
+Additionally, the quickest fix for build failure would to change the port mapping in ```docker-compose.yml```:
+```yaml
+ports:
+   - "<new port>:8501";
+```
+Then open ```http://localhost:<new port>``` in the browser. 
+
 ---
 
 ## 🗂️ Project Structure

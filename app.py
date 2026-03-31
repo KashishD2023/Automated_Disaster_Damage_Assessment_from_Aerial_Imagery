@@ -113,6 +113,8 @@ POST_DIR = "./data/santa_rosa_demo/post"
 FEMA_DIR = "./data/santa_rosa_demo/fema"
 GROUND_TRUTH_DIR = "./data/santa_rosa_demo/ground_truth"
 
+CACHE_FILE = "./data/santa_rosa_demo/results_cache.json"
+
 # =============================================================================
 # HELPERS
 # =============================================================================
@@ -251,8 +253,22 @@ st.markdown("**Powered by** Gemini | **Data:** xView2 Satellite Imagery")
 # =============================================================================
 # SESSION STATE SETUP
 # =============================================================================
+def load_cache_from_disk():
+    if os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE, "r") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+def save_cache_to_disk(cache):
+    os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
+    with open(CACHE_FILE, "w") as f:
+        json.dump(cache, f, indent=2)
+
 if "results_cache" not in st.session_state:
-    st.session_state.results_cache = {}
+    st.session_state.results_cache = load_cache_from_disk()
 
 if "chat_messages" not in st.session_state:
     st.session_state.chat_messages = []
@@ -287,6 +303,10 @@ selected_name = st.selectbox(
     index=0,
 )
 
+cached_count = len(st.session_state.results_cache)
+if cached_count > 0:
+    st.success(f"💾 {cached_count}/{len(tile_names)} tiles already classified and loaded from disk")
+
 selected_pair = next(p for p in available_pairs if p["name"] == selected_name)
 
 with open(selected_pair["label"], "r") as f:
@@ -314,6 +334,7 @@ if not results:
 # =============================================================================
 st.divider()
 
+# --- Per-tile analysis ---
 with st.form("analysis_form"):
     batch_size = st.selectbox(
         "Batch size (buildings per API call):",
@@ -321,34 +342,51 @@ with st.form("analysis_form"):
         index=2,
         help="Larger = fewer API calls. 85 recommended for Pro.",
     )
-    analyze_btn = st.form_submit_button("🔍 Analyze Damage with AI", type="primary")
+    col_a, col_b = st.columns(2)
+    with col_a:
+        analyze_btn = st.form_submit_button("🔍 Analyze This Tile", type="primary")
+    with col_b:
+        analyze_all_btn = st.form_submit_button("🚀 Analyze ALL Tiles", type="secondary")
 
-if analyze_btn:
-    progress_text = st.empty()
-    progress_bar = st.progress(0)
+if analyze_btn or analyze_all_btn:
+    tiles_to_run = available_pairs if analyze_all_btn else [selected_pair]
+    overall_progress = st.progress(0)
+    status_text = st.empty()
 
-    try:
-        detector = DamageDetector()
-        progress_text.text("Initializing AI...")
+    for tile_idx, pair in enumerate(tiles_to_run):
+        status_text.text(f"Analyzing {pair['name']} ({tile_idx + 1}/{len(tiles_to_run)})...")
+        progress_text = st.empty()
+        progress_bar = st.progress(0)
 
-        results = detector.analyze_tile(
-            selected_pair["pre"],
-            selected_pair["post"],
-            selected_pair["label"],
-            batch_size=batch_size,
-        )
+        max_tile_retries = 3
+        for tile_attempt in range(max_tile_retries):
+            try:
+                detector = DamageDetector()
+                results = detector.analyze_tile(
+                    pair["pre"],
+                    pair["post"],
+                    pair["label"],
+                    batch_size=batch_size,
+                )
+                st.session_state.results_cache[pair["name"]] = results
+                save_cache_to_disk(st.session_state.results_cache)
+                progress_bar.progress(1.0)
+                progress_text.text(f"✅ {pair['name']}: {len(results)} buildings classified")
+                break  # success, move to next tile
 
-        st.session_state.results_cache[selected_name] = results
-        progress_bar.progress(1.0)
-        progress_text.text("")
-        st.success(f"✅ Classified {len(results)} buildings!")
+            except Exception as e:
+                if tile_attempt < max_tile_retries - 1:
+                    wait = 60 * (tile_attempt + 1)  # 60s, 120s, then give up
+                    status_text.text(
+                        f"⚠️ {pair['name']} failed, retrying in {wait}s (attempt {tile_attempt + 1}/{max_tile_retries})...")
+                    time.sleep(wait)
+                else:
+                    st.warning(f"⚠️ Skipping {pair['name']} after {max_tile_retries} attempts: {e}")
 
-    except Exception as e:
-        st.error(f"❌ Error: {e}")
-        import traceback
-        st.code(traceback.format_exc())
+        overall_progress.progress((tile_idx + 1) / len(tiles_to_run))
 
-# refresh after analysis
+    status_text.text("✅ All done!")
+
 results = st.session_state.results_cache.get(selected_name)
 
 # =============================================================================

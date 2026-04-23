@@ -396,51 +396,62 @@ if results:
     st.divider()
     st.subheader("🗺️ Damage Assessment Map")
 
-    uid_to_damage = {}
-    for r in results:
-        uid_to_damage[r.get("uid", "")] = {
-            "damage": r.get("damage", "un-classified"),
-            "confidence": r.get("confidence", 0),
-            "description": r.get("description", ""),
-        }
-
-    polygons = label_data.get("features", {}).get("lng_lat", [])
+    # Build features from EVERY cached tile, not just the selected one
+    features_for_map = []
     poly_lats = []
     poly_lngs = []
-    features_for_map = []
 
-    for poly_data in polygons:
-        wkt_str = poly_data.get("wkt", "")
-        uid = poly_data.get("properties", {}).get("uid", "")
+    for tile_name, tile_results in st.session_state.results_cache.items():
+        tile_pair = next((p for p in available_pairs if p["name"] == tile_name), None)
+        if not tile_pair:
+            continue
 
         try:
-            geom = wkt_loads(wkt_str)
-            coords = list(geom.exterior.coords)
-            lngs = [c[0] for c in coords]
-            lats = [c[1] for c in coords]
-            poly_lngs.extend(lngs)
-            poly_lats.extend(lats)
-
-            ai_result = uid_to_damage.get(
-                uid,
-                {
-                    "damage": "un-classified",
-                    "confidence": 0,
-                    "description": "Not classified",
-                },
-            )
-
-            features_for_map.append(
-                {
-                    "geom": geom,
-                    "uid": uid,
-                    "damage": ai_result["damage"],
-                    "confidence": ai_result["confidence"],
-                    "description": ai_result["description"],
-                }
-            )
+            with open(tile_pair["label"], "r") as f:
+                tile_label_data = json.load(f)
         except Exception:
             continue
+
+        uid_to_damage = {
+            r.get("uid", ""): {
+                "damage": r.get("damage", "un-classified"),
+                "confidence": r.get("confidence", 0),
+                "description": r.get("description", ""),
+            }
+            for r in tile_results
+        }
+
+        for poly_data in tile_label_data.get("features", {}).get("lng_lat", []):
+            wkt_str = poly_data.get("wkt", "")
+            uid = poly_data.get("properties", {}).get("uid", "")
+
+            try:
+                geom = wkt_loads(wkt_str)
+                coords = list(geom.exterior.coords)
+                poly_lngs.extend(c[0] for c in coords)
+                poly_lats.extend(c[1] for c in coords)
+
+                ai_result = uid_to_damage.get(
+                    uid,
+                    {
+                        "damage": "un-classified",
+                        "confidence": 0,
+                        "description": "Not classified",
+                    },
+                )
+
+                features_for_map.append(
+                    {
+                        "tile": tile_name,
+                        "geom": geom,
+                        "uid": uid,
+                        "damage": ai_result["damage"],
+                        "confidence": ai_result["confidence"],
+                        "description": ai_result["description"],
+                    }
+                )
+            except Exception:
+                continue
 
     if not features_for_map:
         st.warning("No valid polygons to display")
@@ -501,7 +512,7 @@ if results:
         else:
             conf_str = str(conf)
 
-        tooltip_text = f"{damage} ({conf_str}) - {feat['uid'][:8]}"
+        tooltip_text = f"[{feat.get('tile', '?')}] {damage} ({conf_str}) - {feat['uid'][:8]}"
 
         folium.Polygon(
             locations=poly_coords,

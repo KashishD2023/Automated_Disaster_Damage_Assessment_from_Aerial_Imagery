@@ -193,6 +193,7 @@ def build_combined_tile_data(pairs):
     return all_tiles
 
 
+
 def image_to_data_url(image_path):
     with Image.open(image_path) as img:
         buffer = BytesIO()
@@ -525,7 +526,15 @@ if results:
         ).add_to(m)
 
     m.fit_bounds([[min(poly_lats), min(poly_lngs)], [max(poly_lats), max(poly_lngs)]])
-    st_folium(m, width=1400, height=650)
+
+    st_folium(
+        m,
+        width=1400,
+        height=650,
+        returned_objects=[],  # stop returning zoom/pan state -> no rerun on interact
+        key=f"damage_map_{selected_name}",
+    )
+
 
     st.markdown(
         """
@@ -652,7 +661,8 @@ if results:
 # =============================================================================
 # SIDEBAR: AI CHATBOT
 # =============================================================================
-with st.sidebar:
+@st.fragment
+def render_chat_sidebar(selected_name, results_for_chat):
     st.header("💬 Ask About Results")
 
     think_fast = st.toggle(
@@ -667,34 +677,33 @@ with st.sidebar:
         else:
             st.info("Could not load docs/docs/chatbot_questions.md")
 
-    results_for_chat = st.session_state.results_cache.get(selected_name)
+    if not results_for_chat:
+        st.info("Run an analysis first to enable the chatbot. It can answer questions about the damage results.")
+        return
 
-    if results_for_chat:
-        total_chat = len(results_for_chat)
-        destroyed_chat = sum(1 for r in results_for_chat if r.get("damage") == "destroyed")
-        minor_chat = sum(1 for r in results_for_chat if r.get("damage") == "minor-damage")
-        no_damage_chat = sum(1 for r in results_for_chat if r.get("damage") == "no-damage")
-        unclassified_chat = sum(1 for r in results_for_chat if r.get("damage") == "un-classified")
+    total_chat = len(results_for_chat)
+    destroyed_chat = sum(1 for r in results_for_chat if r.get("damage") == "destroyed")
+    minor_chat = sum(1 for r in results_for_chat if r.get("damage") == "minor-damage")
+    no_damage_chat = sum(1 for r in results_for_chat if r.get("damage") == "no-damage")
+    unclassified_chat = sum(1 for r in results_for_chat if r.get("damage") == "un-classified")
 
-        building_details = ""
-        for r in results_for_chat[:100]:
-            conf_value = r.get("confidence", 0)
-            try:
-                conf_text = f"{float(conf_value):.0%}"
-            except Exception:
-                conf_text = str(conf_value)
+    building_details = ""
+    for r in results_for_chat[:100]:
+        conf_value = r.get("confidence", 0)
+        try:
+            conf_text = f"{float(conf_value):.0%}"
+        except Exception:
+            conf_text = str(conf_value)
+        building_details += (
+            f"  - UID: {r.get('uid', '?')}, "
+            f"Damage: {r.get('damage', '?')}, "
+            f"Confidence: {conf_text}, "
+            f"Notes: {r.get('description', 'N/A')}\n"
+        )
+    if len(results_for_chat) > 100:
+        building_details += f"  ... and {len(results_for_chat) - 100} more buildings\n"
 
-            building_details += (
-                f"  - UID: {r.get('uid', '?')}, "
-                f"Damage: {r.get('damage', '?')}, "
-                f"Confidence: {conf_text}, "
-                f"Notes: {r.get('description', 'N/A')}\n"
-            )
-
-        if len(results_for_chat) > 100:
-            building_details += f"  ... and {len(results_for_chat) - 100} more buildings\n"
-
-        system_context = f"""You are a disaster damage assessment assistant for the Santa Rosa wildfire project.
+    system_context = f"""You are a disaster damage assessment assistant for the Santa Rosa wildfire project.
 You have access to AI classified building damage data for satellite tile: {selected_name}
 
 DAMAGE SUMMARY:
@@ -724,70 +733,71 @@ RULES:
 - Keep answers focused and helpful.
 """
 
-        for msg in st.session_state.chat_messages:
-            with st.chat_message(msg["role"]):
-                st.write(msg["content"])
+    for msg in st.session_state.chat_messages:
+        with st.chat_message(msg["role"]):
+            st.write(msg["content"])
 
-        user_question = st.chat_input("Ask about the damage results...")
+    user_question = st.chat_input("Ask about the damage results...")
 
-        if user_question:
-            st.session_state.chat_messages.append({"role": "user", "content": user_question})
+    if user_question:
+        st.session_state.chat_messages.append({"role": "user", "content": user_question})
 
-            with st.chat_message("user"):
-                st.write(user_question)
+        with st.chat_message("user"):
+            st.write(user_question)
 
-            try:
-                api_key = os.getenv("GOOGLE_API_KEY")
-                if not api_key:
-                    raise ValueError("GOOGLE_API_KEY is not set in your environment.")
+        try:
+            api_key = os.getenv("GOOGLE_API_KEY")
+            if not api_key:
+                raise ValueError("GOOGLE_API_KEY is not set in your environment.")
 
-                client = genai.Client(api_key=api_key)
+            client = genai.Client(api_key=api_key)
 
-                gemini_contents = [system_context]
-                for msg in st.session_state.chat_messages:
-                    gemini_contents.append(f"{msg['role'].upper()}: {msg['content']}")
+            gemini_contents = [system_context]
+            for msg in st.session_state.chat_messages:
+                gemini_contents.append(f"{msg['role'].upper()}: {msg['content']}")
 
-                model_name = FAST_CHAT_MODEL if think_fast else DEFAULT_CHAT_MODEL
+            model_name = FAST_CHAT_MODEL if think_fast else DEFAULT_CHAT_MODEL
 
-                with st.chat_message("assistant"):
-                    thinking_placeholder = st.empty()
-                    thinking_placeholder.markdown(
-                        """
-                        <div class="thinking-bubbles">
-                            <span></span><span></span><span></span>
-                        </div>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-
-                    response = client.models.generate_content(
-                        model=model_name,
-                        contents=gemini_contents,
-                    )
-
-                    assistant_reply = response.text if getattr(response, "text", None) else "No response returned."
-                    thinking_placeholder.empty()
-                    st.write(assistant_reply)
-
-                st.session_state.chat_messages.append(
-                    {"role": "assistant", "content": assistant_reply}
+            with st.chat_message("assistant"):
+                thinking_placeholder = st.empty()
+                thinking_placeholder.markdown(
+                    """
+                    <div class="thinking-bubbles">
+                        <span></span><span></span><span></span>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
                 )
 
-            except Exception as e:
-                error_msg = f"Chat error: {e}"
-                st.session_state.chat_messages.append(
-                    {"role": "assistant", "content": error_msg}
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=gemini_contents,
                 )
-                with st.chat_message("assistant"):
-                    st.error(error_msg)
 
-        if st.session_state.chat_messages:
-            if st.button("🗑️ Clear Chat"):
-                st.session_state.chat_messages = []
-                st.rerun()
+                assistant_reply = response.text if getattr(response, "text", None) else "No response returned."
+                thinking_placeholder.empty()
+                st.write(assistant_reply)
 
-    else:
-        st.info("Run an analysis first to enable the chatbot. It can answer questions about the damage results.")
+            st.session_state.chat_messages.append(
+                {"role": "assistant", "content": assistant_reply}
+            )
+
+        except Exception as e:
+            error_msg = f"Chat error: {e}"
+            st.session_state.chat_messages.append(
+                {"role": "assistant", "content": error_msg}
+            )
+            with st.chat_message("assistant"):
+                st.error(error_msg)
+
+    if st.session_state.chat_messages:
+        if st.button("🗑️ Clear Chat"):
+            st.session_state.chat_messages = []
+            st.rerun()
+
+with st.sidebar:
+    results_for_chat = st.session_state.results_cache.get(selected_name)
+    render_chat_sidebar(selected_name, results_for_chat)
 
 # =============================================================================
 # NO RESULTS STATE

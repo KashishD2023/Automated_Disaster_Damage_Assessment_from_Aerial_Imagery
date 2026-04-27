@@ -193,7 +193,7 @@ def build_combined_tile_data(pairs):
     return all_tiles
 
 
-
+@st.cache_data
 def image_to_data_url(image_path):
     with Image.open(image_path) as img:
         buffer = BytesIO()
@@ -201,6 +201,47 @@ def image_to_data_url(image_path):
         encoded = base64.b64encode(buffer.getvalue()).decode()
         return f"data:image/png;base64,{encoded}"
 
+@st.cache_data
+def build_all_features(cache_key, pair_names_key):
+    """Build polygon features from every cached tile. Args are hashable cache keys."""
+    features = []
+    lats = []
+    lngs = []
+
+    cache = st.session_state.results_cache
+    for tile_name, tile_results in cache.items():
+        tile_pair = next((p for p in available_pairs if p["name"] == tile_name), None)
+        if not tile_pair:
+            continue
+        try:
+            with open(tile_pair["label"], "r") as f:
+                tile_label_data = json.load(f)
+        except Exception:
+            continue
+
+        uid_to_damage = {
+            r.get("uid", ""): {
+                "damage": r.get("damage", "un-classified"),
+                "confidence": r.get("confidence", 0),
+                "description": r.get("description", ""),
+            }
+            for r in tile_results
+        }
+
+        for poly_data in tile_label_data.get("features", {}).get("lng_lat", []):
+            wkt_str = poly_data.get("wkt", "")
+            uid = poly_data.get("properties", {}).get("uid", "")
+            try:
+                geom = wkt_loads(wkt_str)
+                coords = list(geom.exterior.coords)
+                lngs.extend(c[0] for c in coords)
+                lats.extend(c[1] for c in coords)
+                ai = uid_to_damage.get(uid, {"damage": "un-classified", "confidence": 0, "description": "Not classified"})
+                features.append({"tile": tile_name, "geom": geom, "uid": uid, **ai})
+            except Exception:
+                continue
+
+    return features, lats, lngs
 
 def make_single_interactive_map(all_tiles, selected_name, layer_mode):
     selected_tile = next((t for t in all_tiles if t["name"] == selected_name), None)
@@ -292,371 +333,350 @@ if not all_tiles:
     st.stop()
 
 # =============================================================================
-# SECTION 1: TILE SELECTION + SINGLE MAP
+# TABS
 # =============================================================================
-st.subheader("📂 Select a Tile")
-
-tile_names = [p["name"] for p in available_pairs]
-
-selected_name = st.selectbox(
-    f"Choose a tile ({len(tile_names)} available):",
-    tile_names,
-    index=0,
-)
-
-cached_count = len(st.session_state.results_cache)
-if cached_count > 0:
-    st.success(f"💾 {cached_count}/{len(tile_names)} tiles already classified and loaded from disk")
-
-selected_pair = next(p for p in available_pairs if p["name"] == selected_name)
-
-with open(selected_pair["label"], "r") as f:
-    label_data = json.load(f)
-
-building_count = len(label_data.get("features", {}).get("lng_lat", []))
-st.info(f"📍 {building_count} building polygons found in selected tile")
-
-results = st.session_state.results_cache.get(selected_name)
-
-if not results:
-    layer_mode = st.radio(
-        "Map Layer",
-        ["Pre Disaster", "Post Disaster"],
-        horizontal=True,
-        key="main_map_layer_mode",
-    )
-
-    st.subheader("🗺 Interactive Tile Map")
-    main_map = make_single_interactive_map(all_tiles, selected_name, layer_mode)
-    st_folium(main_map, width=1400, height=700)
+tab_map, tab_results = st.tabs(["🗺️ Map", "📊 Results"])
 
 # =============================================================================
-# SECTION 2: AI ANALYSIS TRIGGER
+# TAB 1: MAP
 # =============================================================================
-st.divider()
+with tab_map:
+    st.subheader("📂 Select a Tile")
 
-# --- Per-tile analysis ---
-with st.form("analysis_form"):
-    batch_size = st.selectbox(
-        "Batch size (buildings per API call):",
-        [25, 50, 85, 170],
-        index=2,
-        help="Larger = fewer API calls. 85 recommended for Pro.",
-    )
-    col_a, col_b = st.columns(2)
-    with col_a:
-        analyze_btn = st.form_submit_button("🔍 Analyze This Tile", type="primary")
-    with col_b:
-        analyze_all_btn = st.form_submit_button("🚀 Analyze ALL Tiles", type="secondary")
+    tile_names = [p["name"] for p in available_pairs]
 
-if analyze_btn or analyze_all_btn:
-    tiles_to_run = available_pairs if analyze_all_btn else [selected_pair]
-    overall_progress = st.progress(0)
-    status_text = st.empty()
-
-    for tile_idx, pair in enumerate(tiles_to_run):
-        status_text.text(f"Analyzing {pair['name']} ({tile_idx + 1}/{len(tiles_to_run)})...")
-        progress_text = st.empty()
-        progress_bar = st.progress(0)
-
-        max_tile_retries = 3
-        for tile_attempt in range(max_tile_retries):
-            try:
-                detector = DamageDetector()
-                results = detector.analyze_tile(
-                    pair["pre"],
-                    pair["post"],
-                    pair["label"],
-                    batch_size=batch_size,
-                )
-                st.session_state.results_cache[pair["name"]] = results
-                save_cache_to_disk(st.session_state.results_cache)
-                progress_bar.progress(1.0)
-                progress_text.text(f"✅ {pair['name']}: {len(results)} buildings classified")
-                break  # success, move to next tile
-
-            except Exception as e:
-                if tile_attempt < max_tile_retries - 1:
-                    wait = 60 * (tile_attempt + 1)  # 60s, 120s, then give up
-                    status_text.text(
-                        f"⚠️ {pair['name']} failed, retrying in {wait}s (attempt {tile_attempt + 1}/{max_tile_retries})...")
-                    time.sleep(wait)
-                else:
-                    st.warning(f"⚠️ Skipping {pair['name']} after {max_tile_retries} attempts: {e}")
-
-        overall_progress.progress((tile_idx + 1) / len(tiles_to_run))
-
-    status_text.text("✅ All done!")
-
-results = st.session_state.results_cache.get(selected_name)
-
-# =============================================================================
-# SECTION 3: DAMAGE ASSESSMENT MAP
-# =============================================================================
-if results:
-    st.divider()
-    st.subheader("🗺️ Damage Assessment Map")
-
-    # Build features from EVERY cached tile, not just the selected one
-    features_for_map = []
-    poly_lats = []
-    poly_lngs = []
-
-    for tile_name, tile_results in st.session_state.results_cache.items():
-        tile_pair = next((p for p in available_pairs if p["name"] == tile_name), None)
-        if not tile_pair:
-            continue
-
-        try:
-            with open(tile_pair["label"], "r") as f:
-                tile_label_data = json.load(f)
-        except Exception:
-            continue
-
-        uid_to_damage = {
-            r.get("uid", ""): {
-                "damage": r.get("damage", "un-classified"),
-                "confidence": r.get("confidence", 0),
-                "description": r.get("description", ""),
-            }
-            for r in tile_results
-        }
-
-        for poly_data in tile_label_data.get("features", {}).get("lng_lat", []):
-            wkt_str = poly_data.get("wkt", "")
-            uid = poly_data.get("properties", {}).get("uid", "")
-
-            try:
-                geom = wkt_loads(wkt_str)
-                coords = list(geom.exterior.coords)
-                poly_lngs.extend(c[0] for c in coords)
-                poly_lats.extend(c[1] for c in coords)
-
-                ai_result = uid_to_damage.get(
-                    uid,
-                    {
-                        "damage": "un-classified",
-                        "confidence": 0,
-                        "description": "Not classified",
-                    },
-                )
-
-                features_for_map.append(
-                    {
-                        "tile": tile_name,
-                        "geom": geom,
-                        "uid": uid,
-                        "damage": ai_result["damage"],
-                        "confidence": ai_result["confidence"],
-                        "description": ai_result["description"],
-                    }
-                )
-            except Exception:
-                continue
-
-    if not features_for_map:
-        st.warning("No valid polygons to display")
-        st.stop()
-
-    center_lat = sum(poly_lats) / len(poly_lats)
-    center_lng = sum(poly_lngs) / len(poly_lngs)
-
-    damage_bg_mode = st.radio(
-        "Damage Map Background",
-        ["Pre Disaster", "Post Disaster"],
-        horizontal=True,
-        key="damage_map_bg_mode",
+    selected_name = st.selectbox(
+        f"Choose a tile ({len(tile_names)} available):",
+        tile_names,
+        index=0,
     )
 
-    m = folium.Map(
-        location=[center_lat, center_lng],
-        zoom_start=18,
-        tiles=None,
-    )
+    cached_count = len(st.session_state.results_cache)
+    if cached_count > 0:
+        st.success(f"💾 {cached_count}/{len(tile_names)} tiles already classified and loaded from disk")
 
-    folium.TileLayer(
-        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        attr="Esri World Imagery",
-        name="Esri Satellite",
-        overlay=False,
-        control=False,
-    ).add_to(m)
+    selected_pair = next(p for p in available_pairs if p["name"] == selected_name)
 
-    selected_bounds = get_bounds_from_label(selected_pair["label"])
-    bg_image_path = (
-        selected_pair["pre"] if damage_bg_mode == "Pre Disaster" else selected_pair["post"]
-    )
+    with open(selected_pair["label"], "r") as f:
+        label_data = json.load(f)
 
-    if selected_bounds:
-        try:
-            image_url = image_to_data_url(bg_image_path)
-            ImageOverlay(
-                image=image_url,
-                bounds=selected_bounds,
-                opacity=0.72,
-                interactive=False,
-                cross_origin=False,
-                zindex=1,
-            ).add_to(m)
-        except Exception as e:
-            st.warning(f"Could not render damage map background: {e}")
+    building_count = len(label_data.get("features", {}).get("lng_lat", []))
+    st.info(f"📍 {building_count} building polygons found in selected tile")
 
-    for feat in features_for_map:
-        damage = feat["damage"]
-        color = DAMAGE_COLOR.get(damage, "#808080")
-        fill_opacity = DAMAGE_FILL_OPACITY.get(damage, 0.3)
-        poly_coords = [(lat, lng) for lng, lat in feat["geom"].exterior.coords]
+    results = st.session_state.results_cache.get(selected_name)
 
-        conf = feat.get("confidence", 0)
-        if isinstance(conf, (int, float)):
-            conf_str = f"{conf:.0%}" if conf <= 1 else f"{conf}%"
-        else:
-            conf_str = str(conf)
-
-        tooltip_text = f"[{feat.get('tile', '?')}] {damage} ({conf_str}) - {feat['uid'][:8]}"
-
-        folium.Polygon(
-            locations=poly_coords,
-            color=color,
-            fill=True,
-            fill_color=color,
-            fill_opacity=fill_opacity,
-            weight=2,
-            tooltip=tooltip_text,
-        ).add_to(m)
-
-    m.fit_bounds([[min(poly_lats), min(poly_lngs)], [max(poly_lats), max(poly_lngs)]])
-
-    st_folium(
-        m,
-        width=1400,
-        height=650,
-        returned_objects=[],  # stop returning zoom/pan state -> no rerun on interact
-        key=f"damage_map_{selected_name}",
-    )
-
-
-    st.markdown(
-        """
-        | Color | Damage Level |
-        |-------|-------------|
-        | 🟩 | No Damage |
-        | 🟨 | Minor Damage |
-        | 🟥 | Destroyed |
-        | ⬜ | Un-classified |
-        """
-    )
-
-    st.divider()
-    st.subheader("📊 Damage Statistics")
-
-    total = len(results)
-    destroyed = sum(1 for r in results if r.get("damage") == "destroyed")
-    minor = sum(1 for r in results if r.get("damage") == "minor-damage")
-    no_damage = sum(1 for r in results if r.get("damage") == "no-damage")
-    unclassified = sum(1 for r in results if r.get("damage") == "un-classified")
-
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Total Buildings", total)
-    c2.metric(
-        "No Damage",
-        no_damage,
-        delta=f"{no_damage/total*100:.0f}%" if total else "0%",
-        delta_color="normal",
-    )
-    c3.metric(
-        "Minor Damage",
-        minor,
-        delta=f"{minor/total*100:.0f}%" if total else "0%",
-        delta_color="off",
-    )
-    c4.metric(
-        "Destroyed",
-        destroyed,
-        delta=f"{destroyed/total*100:.0f}%" if total else "0%",
-        delta_color="inverse",
-    )
-
-    if unclassified > 0:
-        st.metric(
-            "Un-classified",
-            unclassified,
-            delta=f"{unclassified/total*100:.0f}%" if total else "0%",
+    # --- Raw pre/post map (shown before analysis) ---
+    if not results:
+        layer_mode = st.radio(
+            "Map Layer",
+            ["Pre Disaster", "Post Disaster"],
+            horizontal=True,
+            key="main_map_layer_mode",
         )
 
-    gt_path = os.path.join(GROUND_TRUTH_DIR, f"{selected_name}_post_disaster.json")
-    if os.path.exists(gt_path):
+        st.subheader("🗺 Interactive Tile Map")
+        main_map = make_single_interactive_map(all_tiles, selected_name, layer_mode)
+        st_folium(
+            main_map,
+            width=1400,
+            height=700,
+            returned_objects=[],
+            key=f"main_map_{selected_name}_{layer_mode}",
+        )
+
+    # --- Analysis controls ---
+    st.divider()
+    with st.form("analysis_form"):
+        batch_size = st.selectbox(
+            "Batch size (buildings per API call):",
+            [25, 50, 85, 170],
+            index=2,
+            help="Larger = fewer API calls. 85 recommended for Pro.",
+        )
+        col_a, col_b = st.columns(2)
+        with col_a:
+            analyze_btn = st.form_submit_button("🔍 Analyze This Tile", type="primary")
+        with col_b:
+            analyze_all_btn = st.form_submit_button("🚀 Analyze ALL Tiles", type="secondary")
+
+    if analyze_btn or analyze_all_btn:
+        tiles_to_run = available_pairs if analyze_all_btn else [selected_pair]
+        overall_progress = st.progress(0)
+        status_text = st.empty()
+
+        for tile_idx, pair in enumerate(tiles_to_run):
+            status_text.text(f"Analyzing {pair['name']} ({tile_idx + 1}/{len(tiles_to_run)})...")
+            progress_text = st.empty()
+            progress_bar = st.progress(0)
+
+            max_tile_retries = 3
+            for tile_attempt in range(max_tile_retries):
+                try:
+                    detector = DamageDetector()
+                    results = detector.analyze_tile(
+                        pair["pre"],
+                        pair["post"],
+                        pair["label"],
+                        batch_size=batch_size,
+                    )
+                    st.session_state.results_cache[pair["name"]] = results
+                    save_cache_to_disk(st.session_state.results_cache)
+                    progress_bar.progress(1.0)
+                    progress_text.text(f"✅ {pair['name']}: {len(results)} buildings classified")
+                    break
+
+                except Exception as e:
+                    if tile_attempt < max_tile_retries - 1:
+                        wait = 60 * (tile_attempt + 1)
+                        status_text.text(
+                            f"⚠️ {pair['name']} failed, retrying in {wait}s (attempt {tile_attempt + 1}/{max_tile_retries})..."
+                        )
+                        time.sleep(wait)
+                    else:
+                        st.warning(f"⚠️ Skipping {pair['name']} after {max_tile_retries} attempts: {e}")
+
+            overall_progress.progress((tile_idx + 1) / len(tiles_to_run))
+
+        status_text.text("✅ All done!")
+
+    results = st.session_state.results_cache.get(selected_name)
+
+    # --- Cumulative damage map ---
+    if st.session_state.results_cache:
         st.divider()
-        st.subheader("🎯 Accuracy vs Ground Truth")
+        st.subheader("🗺️ Damage Assessment Map (All Analyzed Tiles)")
 
-        with open(gt_path, "r") as f:
-            gt_data = json.load(f)
+        cache_key = tuple(sorted(st.session_state.results_cache.keys()))
+        pair_names_key = tuple(p["name"] for p in available_pairs)
+        features_for_map, poly_lats, poly_lngs = build_all_features(cache_key, pair_names_key)
 
-        gt_polygons = gt_data.get("features", {}).get("lng_lat", [])
-        gt_lookup = {}
-        for p in gt_polygons:
-            uid = p.get("properties", {}).get("uid", "")
-            subtype = p.get("properties", {}).get("subtype", "unknown")
-            gt_lookup[uid] = subtype
+        if not features_for_map:
+            st.warning("No valid polygons to display")
+        else:
+            center_lat = sum(poly_lats) / len(poly_lats)
+            center_lng = sum(poly_lngs) / len(poly_lngs)
 
-        correct = 0
+            damage_bg_mode = st.radio(
+                "Selected-tile background",
+                ["Pre Disaster", "Post Disaster"],
+                horizontal=True,
+                key="damage_map_bg_mode",
+            )
+
+            m = folium.Map(
+                location=[center_lat, center_lng],
+                zoom_start=18,
+                tiles=None,
+            )
+
+            folium.TileLayer(
+                tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                attr="Esri World Imagery",
+                name="Esri Satellite",
+                overlay=False,
+                control=False,
+            ).add_to(m)
+
+            # Overlay only the selected tile's PNG (keeps map light)
+            selected_bounds = get_bounds_from_label(selected_pair["label"])
+            bg_image_path = (
+                selected_pair["pre"] if damage_bg_mode == "Pre Disaster" else selected_pair["post"]
+            )
+            if selected_bounds:
+                try:
+                    image_url = image_to_data_url(bg_image_path)
+                    ImageOverlay(
+                        image=image_url,
+                        bounds=selected_bounds,
+                        opacity=0.72,
+                        interactive=False,
+                        cross_origin=False,
+                        zindex=1,
+                    ).add_to(m)
+                except Exception as e:
+                    st.warning(f"Could not render damage map background: {e}")
+
+            # Draw polygons for every analyzed tile
+            for feat in features_for_map:
+                damage = feat["damage"]
+                color = DAMAGE_COLOR.get(damage, "#808080")
+                fill_opacity = DAMAGE_FILL_OPACITY.get(damage, 0.3)
+                poly_coords = [(lat, lng) for lng, lat in feat["geom"].exterior.coords]
+
+                conf = feat.get("confidence", 0)
+                if isinstance(conf, (int, float)):
+                    conf_str = f"{conf:.0%}" if conf <= 1 else f"{conf}%"
+                else:
+                    conf_str = str(conf)
+
+                tooltip_text = f"[{feat.get('tile', '?')}] {damage} ({conf_str}) - {feat['uid'][:8]}"
+
+                folium.Polygon(
+                    locations=poly_coords,
+                    color=color,
+                    fill=True,
+                    fill_color=color,
+                    fill_opacity=fill_opacity,
+                    weight=2,
+                    tooltip=tooltip_text,
+                ).add_to(m)
+
+            # Center on selected tile, let user zoom out for the rest
+            if selected_bounds:
+                m.fit_bounds(selected_bounds)
+            else:
+                m.fit_bounds([[min(poly_lats), min(poly_lngs)], [max(poly_lats), max(poly_lngs)]])
+
+            st_folium(
+                m,
+                width=1400,
+                height=650,
+                returned_objects=[],
+                key=f"damage_map_{selected_name}_{damage_bg_mode}_{len(cache_key)}",
+            )
+
+            st.markdown(
+                """
+                | Color | Damage Level |
+                |-------|-------------|
+                | 🟩 | No Damage |
+                | 🟨 | Minor Damage |
+                | 🟥 | Destroyed |
+                | ⬜ | Un-classified |
+                """
+            )
+
+# =============================================================================
+# TAB 2: RESULTS
+# =============================================================================
+with tab_results:
+    if not st.session_state.results_cache:
+        st.info("👆 Go to the Map tab and analyze a tile to see results here.")
+    else:
+        # --- Cumulative stats across every analyzed tile ---
+        all_results_flat = []
+        for tile_results in st.session_state.results_cache.values():
+            all_results_flat.extend(tile_results)
+
+        st.subheader(f"📊 Cumulative Stats — {len(st.session_state.results_cache)} tile(s) analyzed")
+
+        total = len(all_results_flat)
+        destroyed = sum(1 for r in all_results_flat if r.get("damage") == "destroyed")
+        minor = sum(1 for r in all_results_flat if r.get("damage") == "minor-damage")
+        no_damage = sum(1 for r in all_results_flat if r.get("damage") == "no-damage")
+        unclassified = sum(1 for r in all_results_flat if r.get("damage") == "un-classified")
+
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Total Buildings", total)
+        c2.metric(
+            "No Damage",
+            no_damage,
+            delta=f"{no_damage/total*100:.0f}%" if total else "0%",
+            delta_color="normal",
+        )
+        c3.metric(
+            "Minor Damage",
+            minor,
+            delta=f"{minor/total*100:.0f}%" if total else "0%",
+            delta_color="off",
+        )
+        c4.metric(
+            "Destroyed",
+            destroyed,
+            delta=f"{destroyed/total*100:.0f}%" if total else "0%",
+            delta_color="inverse",
+        )
+
+        if unclassified > 0:
+            st.metric(
+                "Un-classified",
+                unclassified,
+                delta=f"{unclassified/total*100:.0f}%" if total else "0%",
+            )
+
+        # --- Cumulative accuracy vs ground truth ---
+        st.divider()
+        st.subheader("🎯 Accuracy vs Ground Truth (All Analyzed Tiles)")
+
         total_compared = 0
+        correct = 0
         confusion = {}
+        tiles_with_gt = 0
 
-        for r in results:
-            uid = r.get("uid", "")
-            ai_damage = r.get("damage", "un-classified")
-            gt_damage = gt_lookup.get(uid)
+        for tile_name, tile_results in st.session_state.results_cache.items():
+            gt_path = os.path.join(GROUND_TRUTH_DIR, f"{tile_name}_post_disaster.json")
+            if not os.path.exists(gt_path):
+                continue
+            tiles_with_gt += 1
 
-            if gt_damage and gt_damage != "un-classified":
-                total_compared += 1
-                if ai_damage == gt_damage:
-                    correct += 1
-                key = (gt_damage, ai_damage)
-                confusion[key] = confusion.get(key, 0) + 1
+            with open(gt_path, "r") as f:
+                gt_data = json.load(f)
+
+            gt_lookup = {
+                p.get("properties", {}).get("uid", ""): p.get("properties", {}).get("subtype", "unknown")
+                for p in gt_data.get("features", {}).get("lng_lat", [])
+            }
+
+            for r in tile_results:
+                uid = r.get("uid", "")
+                ai_damage = r.get("damage", "un-classified")
+                gt_damage = gt_lookup.get(uid)
+                if gt_damage and gt_damage != "un-classified":
+                    total_compared += 1
+                    if ai_damage == gt_damage:
+                        correct += 1
+                    key = (gt_damage, ai_damage)
+                    confusion[key] = confusion.get(key, 0) + 1
 
         if total_compared > 0:
             accuracy = correct / total_compared * 100
             st.metric(
                 "Overall Accuracy",
                 f"{accuracy:.1f}%",
-                delta=f"{correct}/{total_compared} correct",
+                delta=f"{correct}/{total_compared} correct across {tiles_with_gt} tile(s)",
             )
-
             with st.expander("Confusion Details"):
                 for (gt, ai), count in sorted(confusion.items(), key=lambda x: -x[1]):
                     match = "✅" if gt == ai else "❌"
                     st.write(f"{match} Ground Truth: **{gt}** → AI: **{ai}** ({count}x)")
         else:
-            st.info("No comparable ground truth labels found for this tile.")
+            st.info("No ground truth available for the analyzed tiles.")
 
-    st.divider()
-    st.subheader("🏠 Building Details")
-    for r in results:
-        damage = r.get("damage", "unknown")
-        color_hex = {
-            "no-damage": "🟩",
-            "minor-damage": "🟨",
-            "destroyed": "🟥",
-            "un-classified": "⬜",
-        }.get(damage, "⬜")
+        # --- Per-tile building details (scoped to selected tile for manageability) ---
+        st.divider()
+        st.subheader(f"🏠 Building Details — {selected_name}")
+        st.caption("Showing buildings for the tile selected on the Map tab. Switch tiles there to see others.")
 
-        conf_val = r.get("confidence", 0)
-        try:
-            conf_text = f"{float(conf_val):.0%}"
-        except Exception:
-            conf_text = str(conf_val)
+        tile_results = st.session_state.results_cache.get(selected_name, [])
+        if not tile_results:
+            st.info("Selected tile has not been analyzed yet.")
+        else:
+            for r in tile_results:
+                damage = r.get("damage", "unknown")
+                color_hex = {
+                    "no-damage": "🟩",
+                    "minor-damage": "🟨",
+                    "destroyed": "🟥",
+                    "un-classified": "⬜",
+                }.get(damage, "⬜")
 
-        with st.expander(f"{color_hex} {r.get('uid', '?')[:12]}... — {damage} ({conf_text})"):
-            st.write(r.get("description", "No description available."))
+                conf_val = r.get("confidence", 0)
+                try:
+                    conf_text = f"{float(conf_val):.0%}"
+                except Exception:
+                    conf_text = str(conf_val)
 
-    st.divider()
-    st.download_button(
-        "💾 Download AI Predictions (JSON)",
-        data=json.dumps(results, indent=2),
-        file_name=f"{selected_name}_ai_predictions.json",
-        mime="application/json",
-    )
+                with st.expander(f"{color_hex} {r.get('uid', '?')[:12]}... — {damage} ({conf_text})"):
+                    st.write(r.get("description", "No description available."))
+
+        # --- Download everything ---
+        st.divider()
+        st.download_button(
+            "💾 Download ALL AI Predictions (JSON)",
+            data=json.dumps(st.session_state.results_cache, indent=2),
+            file_name="all_ai_predictions.json",
+            mime="application/json",
+        )
 
 # =============================================================================
 # SIDEBAR: AI CHATBOT

@@ -70,10 +70,10 @@ class DamageDetector:
                 raise ValueError("Please set GOOGLE_API_KEY environment variable")
 
         # Initialize the Google GenAI client
-        self.model = os.getenv('MODEL_NAME', 'gemini-3.1-pro-preview')
+        self.model = os.getenv('MODEL_NAME', 'gemini-2.5-flash')
         self.client = genai.Client(api_key=api_key)
 
-    def _call_gemini(self, contents, model='gemini-3-pro-preview', retries=5):
+    def _call_gemini(self, contents, model='gemini-2.5-flash', retries=5):
         """
         Low-level Gemini API call with automatic retry and rate limit handling.
 
@@ -142,7 +142,7 @@ class DamageDetector:
                 else:
                     raise  # All retries exhausted, propagate the error
 
-    def classify_batch(self, pre_image_bytes, post_image_bytes, buildings_info, model='gemini-3-pro-preview'):
+    def classify_batch(self, pre_image_bytes, post_image_bytes, buildings_info, model='gemini-2.5-flash'):
         """
         Classify a batch of buildings in a single API call.
 
@@ -220,7 +220,7 @@ Return ONLY a JSON array (no markdown, no explanation):
 
         return self._call_gemini(contents, model=model)
 
-    def analyze_tile(self, pre_image_path, post_image_path, label_path, batch_size=85, model='gemini-3-pro-preview',
+    def analyze_tile(self, pre_image_path, post_image_path, label_path, batch_size=85, model='gemini-2.5-flash',
                      progress_callback=None):
         """
         Full analysis pipeline for a single satellite image tile.

@@ -2,6 +2,7 @@ import streamlit as st
 import json
 import os
 import glob
+import time
 import folium
 import base64
 from io import BytesIO
@@ -9,6 +10,7 @@ from pathlib import Path
 from PIL import Image
 
 from google import genai
+from google.genai import types
 from shapely.wkt import loads as wkt_loads
 from streamlit_folium import st_folium
 from folium.raster_layers import ImageOverlay
@@ -85,8 +87,8 @@ st.markdown(
 # =============================================================================
 # MODEL CONFIG
 # =============================================================================
-DEFAULT_CHAT_MODEL = "gemini-3-pro-preview"
-FAST_CHAT_MODEL = "gemini-3-flash-preview"
+DEFAULT_CHAT_MODEL = os.getenv("MODEL_NAME", "gemini-2.5-flash")
+FAST_CHAT_MODEL = "gemini-2.5-flash"
 
 # =============================================================================
 # DAMAGE LEVEL COLOR MAPPING
@@ -286,6 +288,50 @@ def make_single_interactive_map(all_tiles, selected_name, layer_mode):
     return m
 
 
+
+
+def analyze_uploaded_images_backend(pre_path, post_path):
+    """Analyze user-uploaded pre/post images using Gemini.
+
+    DamageDetector.analyze_tile needs a FEMA/xView2 label JSON file with building
+    polygons. User uploads usually do not include that label file, so this backend path
+    performs image-level damage assessment instead of per-building polygon classification.
+    """
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        raise ValueError("GOOGLE_API_KEY is not set in your environment.")
+
+    model_name = os.getenv("MODEL_NAME", "gemini-2.5-flash")
+    client = genai.Client(api_key=api_key)
+
+    pre_bytes = Path(pre_path).read_bytes()
+    post_bytes = Path(post_path).read_bytes()
+
+    prompt = """
+You are a disaster damage assessment AI.
+Compare the PRE disaster image and POST disaster image.
+Return a concise damage assessment with these sections:
+
+1. Overall Damage Level: choose one of no-damage, minor-damage, major-damage, destroyed, or uncertain.
+2. Visible Changes: describe important visual differences between pre and post imagery.
+3. Likely Damaged Areas: identify where damage appears in the image, such as top-left, center, bottom-right.
+4. Confidence: give a percentage from 0 to 100.
+5. Notes: mention limitations if the images are not aligned, blurry, or not satellite/aerial imagery.
+
+Do not invent exact building counts unless they are clearly visible.
+"""
+
+    response = client.models.generate_content(
+        model=model_name,
+        contents=[
+            prompt,
+            types.Part.from_bytes(data=pre_bytes, mime_type="image/png"),
+            types.Part.from_bytes(data=post_bytes, mime_type="image/png"),
+        ],
+    )
+
+    return response.text if getattr(response, "text", None) else "No response returned."
+
 # =============================================================================
 # HEADER
 # =============================================================================
@@ -335,7 +381,7 @@ if not all_tiles:
 # =============================================================================
 # TABS
 # =============================================================================
-tab_map, tab_results = st.tabs(["🗺️ Map", "📊 Results"])
+tab_map, tab_results, tab_upload = st.tabs(["🗺️ Map", "📊 Results", "📤 Upload Images"])
 
 # =============================================================================
 # TAB 1: MAP
@@ -819,6 +865,81 @@ with st.sidebar:
     results_for_chat = st.session_state.results_cache.get(selected_name)
     render_chat_sidebar(selected_name, results_for_chat)
 
+with tab_upload:
+    st.header("📤 Upload Your Own Disaster Images")
+
+    pre_image = st.file_uploader(
+        "Upload Pre Disaster Image",
+        type=["png", "jpg", "jpeg"],
+        key="custom_pre_image"
+    )
+
+    post_image = st.file_uploader(
+        "Upload Post Disaster Image",
+        type=["png", "jpg", "jpeg"],
+        key="custom_post_image"
+    )
+
+    geojson_file = st.file_uploader(
+        "Upload Building GeoJSON (required for full backend)",
+        type=["json", "geojson"],
+        key="custom_geojson"
+    )
+
+    if pre_image and post_image:
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.image(pre_image, caption="Pre Disaster", use_container_width=True)
+        with col2:
+            st.image(post_image, caption="Post Disaster", use_container_width=True)
+
+    if pre_image and post_image and geojson_file:
+        if st.button("🚀 Analyze Uploaded Images (Full Backend)"):
+            upload_dir = Path("uploaded_user_images")
+            upload_dir.mkdir(exist_ok=True)
+
+            pre_path = upload_dir / "user_pre.png"
+            post_path = upload_dir / "user_post.png"
+            label_path = upload_dir / "user_labels.json"
+
+            # save files
+            with open(pre_path, "wb") as f:
+                f.write(pre_image.getbuffer())
+
+            with open(post_path, "wb") as f:
+                f.write(post_image.getbuffer())
+
+            with open(label_path, "wb") as f:
+                f.write(geojson_file.getbuffer())
+
+            st.info("Running full backend (building-level)...")
+
+            try:
+                detector = DamageDetector()
+
+                results = detector.analyze_tile(
+                    str(pre_path),
+                    str(post_path),
+                    str(label_path),
+                    batch_size=85,
+                )
+
+                st.success(f"✅ {len(results)} buildings analyzed")
+
+                # show results
+                for r in results[:20]:
+                    st.write({
+                        "uid": r.get("uid"),
+                        "damage": r.get("damage"),
+                        "confidence": r.get("confidence")
+                    })
+
+            except Exception as e:
+                st.error(f"Backend failed: {e}")
+
+    elif pre_image and post_image:
+        st.warning("⚠️ Upload GeoJSON to enable full building-level analysis")
 # =============================================================================
 # NO RESULTS STATE
 # =============================================================================

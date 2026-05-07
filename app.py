@@ -865,81 +865,376 @@ with st.sidebar:
     results_for_chat = st.session_state.results_cache.get(selected_name)
     render_chat_sidebar(selected_name, results_for_chat)
 
+# =============================================================================
+# TAB 3: UPLOAD IMAGES
+# =============================================================================
 with tab_upload:
-    st.header("📤 Upload Your Own Disaster Images")
+    st.header("📤 Upload Your Own Disaster Tile")
+
+    # Separate session state so uploaded tiles don't pollute the demo cache
+    if "uploaded_results" not in st.session_state:
+        st.session_state.uploaded_results = None
+    if "uploaded_paths" not in st.session_state:
+        st.session_state.uploaded_paths = None
 
     pre_image = st.file_uploader(
-        "Upload Pre Disaster Image",
+        "Pre Disaster Image",
         type=["png", "jpg", "jpeg"],
-        key="custom_pre_image"
+        key="custom_pre_image",
     )
-
     post_image = st.file_uploader(
-        "Upload Post Disaster Image",
+        "Post Disaster Image",
         type=["png", "jpg", "jpeg"],
-        key="custom_post_image"
+        key="custom_post_image",
     )
-
     geojson_file = st.file_uploader(
-        "Upload Building GeoJSON (required for full backend)",
+        "Building Polygon JSON (xView2/FEMA format)",
         type=["json", "geojson"],
-        key="custom_geojson"
+        key="custom_geojson",
+        help='Must contain `features.lng_lat[]` with `wkt` strings and `properties.uid`.',
     )
 
+    # --- Image preview ---
     if pre_image and post_image:
         col1, col2 = st.columns(2)
-
         with col1:
             st.image(pre_image, caption="Pre Disaster", use_container_width=True)
         with col2:
             st.image(post_image, caption="Post Disaster", use_container_width=True)
 
-    if pre_image and post_image and geojson_file:
-        if st.button("🚀 Analyze Uploaded Images (Full Backend)"):
+    # --- Validate GeoJSON shape early so the user gets a helpful error ---
+    valid_geojson = False
+    uploaded_building_count = 0
+    if geojson_file is not None:
+        try:
+            geojson_file.seek(0)
+            preview_data = json.loads(geojson_file.read().decode("utf-8"))
+            geojson_file.seek(0)  # reset for later save
+            uploaded_polygons = preview_data.get("features", {}).get("lng_lat", [])
+            uploaded_building_count = len(uploaded_polygons)
+            if uploaded_building_count > 0:
+                valid_geojson = True
+                st.info(f"📍 {uploaded_building_count} building polygons found in uploaded JSON")
+            else:
+                st.error(
+                    "Uploaded JSON has no polygons under `features.lng_lat`. "
+                    "Make sure it follows the xView2/FEMA label format."
+                )
+        except Exception as e:
+            st.error(f"Could not parse uploaded JSON: {e}")
+
+    # --- Analysis controls ---
+    if pre_image and post_image and valid_geojson:
+        with st.form("upload_analysis_form"):
+            upload_batch_size = st.selectbox(
+                "Batch size (buildings per API call):",
+                [25, 50, 85, 170],
+                index=2,
+                help="Larger = fewer API calls. 85 recommended for Pro.",
+                key="upload_batch_size",
+            )
+            run_upload_btn = st.form_submit_button(
+                "🔍 Analyze Uploaded Tile", type="primary"
+            )
+
+        if run_upload_btn:
             upload_dir = Path("uploaded_user_images")
             upload_dir.mkdir(exist_ok=True)
 
-            pre_path = upload_dir / "user_pre.png"
-            post_path = upload_dir / "user_post.png"
+            # Use original extensions so PIL can open jpg/jpeg correctly
+            pre_ext = Path(pre_image.name).suffix.lower() or ".png"
+            post_ext = Path(post_image.name).suffix.lower() or ".png"
+
+            pre_path = upload_dir / f"user_pre{pre_ext}"
+            post_path = upload_dir / f"user_post{post_ext}"
             label_path = upload_dir / "user_labels.json"
 
-            # save files
             with open(pre_path, "wb") as f:
                 f.write(pre_image.getbuffer())
-
             with open(post_path, "wb") as f:
                 f.write(post_image.getbuffer())
-
             with open(label_path, "wb") as f:
                 f.write(geojson_file.getbuffer())
 
-            st.info("Running full backend (building-level)...")
-
+            # If the input wasn't PNG, normalize to PNG since the detector saves PNG bytes anyway.
+            # analyze_tile uses PIL.Image.open which handles jpg fine, so this is just defensive.
             try:
-                detector = DamageDetector()
+                with Image.open(pre_path) as im:
+                    if pre_ext != ".png":
+                        png_path = upload_dir / "user_pre.png"
+                        im.convert("RGB").save(png_path, format="PNG")
+                        pre_path = png_path
+                with Image.open(post_path) as im:
+                    if post_ext != ".png":
+                        png_path = upload_dir / "user_post.png"
+                        im.convert("RGB").save(png_path, format="PNG")
+                        post_path = png_path
+            except Exception as e:
+                st.error(f"Could not read uploaded images: {e}")
+                st.stop()
 
-                results = detector.analyze_tile(
-                    str(pre_path),
-                    str(post_path),
-                    str(label_path),
-                    batch_size=85,
+            status_text = st.empty()
+            progress_bar = st.progress(0)
+
+            def _upload_progress(batch_num, total_batches):
+                progress_bar.progress(batch_num / total_batches)
+                status_text.text(f"Classifying batch {batch_num}/{total_batches}...")
+
+            max_retries = 3
+            results = None
+            for attempt in range(max_retries):
+                try:
+                    status_text.text(
+                        f"Running backend (attempt {attempt + 1}/{max_retries})..."
+                    )
+                    detector = DamageDetector()
+                    results = detector.analyze_tile(
+                        str(pre_path),
+                        str(post_path),
+                        str(label_path),
+                        batch_size=upload_batch_size,
+                        progress_callback=_upload_progress,
+                    )
+                    break
+                except Exception as e:
+                    if attempt < max_retries - 1:
+                        wait = 60 * (attempt + 1)
+                        status_text.text(
+                            f"⚠️ Failed, retrying in {wait}s ({attempt + 1}/{max_retries})..."
+                        )
+                        time.sleep(wait)
+                    else:
+                        st.error(f"Analysis failed after {max_retries} attempts: {e}")
+
+            if results is not None:
+                progress_bar.progress(1.0)
+                status_text.text(f"✅ {len(results)} buildings classified")
+                st.session_state.uploaded_results = results
+                st.session_state.uploaded_paths = {
+                    "pre": str(pre_path),
+                    "post": str(post_path),
+                    "label": str(label_path),
+                }
+
+    # --- Results display (persists across reruns via session state) ---
+    if st.session_state.uploaded_results and st.session_state.uploaded_paths:
+        results = st.session_state.uploaded_results
+        paths = st.session_state.uploaded_paths
+
+        st.divider()
+        st.subheader("📊 Results")
+
+        total = len(results)
+        destroyed = sum(1 for r in results if r.get("damage") == "destroyed")
+        minor = sum(1 for r in results if r.get("damage") == "minor-damage")
+        no_damage = sum(1 for r in results if r.get("damage") == "no-damage")
+        unclassified = sum(1 for r in results if r.get("damage") == "un-classified")
+
+        c1, c2, c3, c4 = st.columns(4)
+        c1.metric("Total Buildings", total)
+        c2.metric(
+            "No Damage",
+            no_damage,
+            delta=f"{no_damage/total*100:.0f}%" if total else "0%",
+            delta_color="normal",
+        )
+        c3.metric(
+            "Minor Damage",
+            minor,
+            delta=f"{minor/total*100:.0f}%" if total else "0%",
+            delta_color="off",
+        )
+        c4.metric(
+            "Destroyed",
+            destroyed,
+            delta=f"{destroyed/total*100:.0f}%" if total else "0%",
+            delta_color="inverse",
+        )
+        if unclassified > 0:
+            st.metric(
+                "Un-classified",
+                unclassified,
+                delta=f"{unclassified/total*100:.0f}%" if total else "0%",
+            )
+
+        # --- Interactive damage map ---
+        st.divider()
+        st.subheader("🗺️ Damage Assessment Map")
+
+        upload_bounds = get_bounds_from_label(paths["label"])
+        if upload_bounds:
+            try:
+                with open(paths["label"], "r") as f:
+                    upload_label_data = json.load(f)
+            except Exception as e:
+                st.warning(f"Could not reload uploaded label JSON: {e}")
+                upload_label_data = {"features": {"lng_lat": []}}
+
+            uid_to_damage = {
+                r.get("uid", ""): {
+                    "damage": r.get("damage", "un-classified"),
+                    "confidence": r.get("confidence", 0),
+                    "description": r.get("description", ""),
+                }
+                for r in results
+            }
+
+            features_for_map = []
+            poly_lats = []
+            poly_lngs = []
+            for poly_data in upload_label_data.get("features", {}).get("lng_lat", []):
+                wkt_str = poly_data.get("wkt", "")
+                uid = poly_data.get("properties", {}).get("uid", "")
+                try:
+                    geom = wkt_loads(wkt_str)
+                    coords = list(geom.exterior.coords)
+                    poly_lngs.extend(c[0] for c in coords)
+                    poly_lats.extend(c[1] for c in coords)
+                    ai = uid_to_damage.get(
+                        uid,
+                        {
+                            "damage": "un-classified",
+                            "confidence": 0,
+                            "description": "Not classified",
+                        },
+                    )
+                    features_for_map.append({"geom": geom, "uid": uid, **ai})
+                except Exception:
+                    continue
+
+            if not features_for_map:
+                st.warning("No valid polygons to display on the map.")
+            else:
+                upload_bg_mode = st.radio(
+                    "Background layer",
+                    ["Pre Disaster", "Post Disaster"],
+                    horizontal=True,
+                    key="upload_map_bg_mode",
                 )
 
-                st.success(f"✅ {len(results)} buildings analyzed")
+                south, west = upload_bounds[0]
+                north, east = upload_bounds[1]
+                center_lat = (south + north) / 2
+                center_lng = (west + east) / 2
 
-                # show results
-                for r in results[:20]:
-                    st.write({
-                        "uid": r.get("uid"),
-                        "damage": r.get("damage"),
-                        "confidence": r.get("confidence")
-                    })
+                m = folium.Map(
+                    location=[center_lat, center_lng],
+                    zoom_start=18,
+                    tiles=None,
+                )
+                folium.TileLayer(
+                    tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                    attr="Esri World Imagery",
+                    name="Esri Satellite",
+                    overlay=False,
+                    control=False,
+                ).add_to(m)
 
-            except Exception as e:
-                st.error(f"Backend failed: {e}")
+                bg_image_path = paths["pre"] if upload_bg_mode == "Pre Disaster" else paths["post"]
+                try:
+                    image_url = image_to_data_url(bg_image_path)
+                    ImageOverlay(
+                        image=image_url,
+                        bounds=upload_bounds,
+                        opacity=0.72,
+                        interactive=False,
+                        cross_origin=False,
+                        zindex=1,
+                    ).add_to(m)
+                except Exception as e:
+                    st.warning(f"Could not render background overlay: {e}")
 
-    elif pre_image and post_image:
-        st.warning("⚠️ Upload GeoJSON to enable full building-level analysis")
+                for feat in features_for_map:
+                    damage = feat["damage"]
+                    color = DAMAGE_COLOR.get(damage, "#808080")
+                    fill_opacity = DAMAGE_FILL_OPACITY.get(damage, 0.3)
+                    poly_coords = [(lat, lng) for lng, lat in feat["geom"].exterior.coords]
+
+                    conf = feat.get("confidence", 0)
+                    if isinstance(conf, (int, float)):
+                        conf_str = f"{conf:.0%}" if conf <= 1 else f"{conf}%"
+                    else:
+                        conf_str = str(conf)
+
+                    tooltip_text = f"{damage} ({conf_str}) - {feat['uid'][:8]}"
+                    folium.Polygon(
+                        locations=poly_coords,
+                        color=color,
+                        fill=True,
+                        fill_color=color,
+                        fill_opacity=fill_opacity,
+                        weight=2,
+                        tooltip=tooltip_text,
+                    ).add_to(m)
+
+                m.fit_bounds(upload_bounds)
+                st_folium(
+                    m,
+                    width=1400,
+                    height=650,
+                    returned_objects=[],
+                    key=f"upload_damage_map_{upload_bg_mode}",
+                )
+
+                st.markdown(
+                    """
+                    | Color | Damage Level |
+                    |-------|-------------|
+                    | 🟩 | No Damage |
+                    | 🟨 | Minor Damage |
+                    | 🟥 | Destroyed |
+                    | ⬜ | Un-classified |
+                    """
+                )
+        else:
+            st.warning(
+                "Could not derive geographic bounds from the uploaded JSON, "
+                "so the interactive damage map can't be rendered."
+            )
+
+        # --- Per-building details ---
+        st.divider()
+        st.subheader("🏠 Building Details")
+        for r in results:
+            damage = r.get("damage", "unknown")
+            color_hex = {
+                "no-damage": "🟩",
+                "minor-damage": "🟨",
+                "destroyed": "🟥",
+                "un-classified": "⬜",
+            }.get(damage, "⬜")
+
+            conf_val = r.get("confidence", 0)
+            try:
+                conf_text = f"{float(conf_val):.0%}"
+            except Exception:
+                conf_text = str(conf_val)
+
+            with st.expander(
+                f"{color_hex} {r.get('uid', '?')[:12]}... — {damage} ({conf_text})"
+            ):
+                st.write(r.get("description", "No description available."))
+
+        # --- Download + clear ---
+        st.divider()
+        col_dl, col_clear = st.columns(2)
+        with col_dl:
+            st.download_button(
+                "💾 Download Results (JSON)",
+                data=json.dumps(results, indent=2),
+                file_name="uploaded_tile_predictions.json",
+                mime="application/json",
+            )
+        with col_clear:
+            if st.button("🗑️ Clear Uploaded Results"):
+                st.session_state.uploaded_results = None
+                st.session_state.uploaded_paths = None
+                st.rerun()
+
+    elif not (pre_image and post_image and valid_geojson):
+        st.info(
+            "Upload a pre image, post image, and a building polygon JSON to enable analysis."
+        )
 # =============================================================================
 # NO RESULTS STATE
 # =============================================================================

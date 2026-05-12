@@ -1,6 +1,13 @@
 import os
 import glob
 import json
+
+from dotenv import load_dotenv
+load_dotenv()  # This loads .env file
+
+# Then your other imports
+from ai_damage_detector import DamageDetector
+
 from ai_damage_detector import DamageDetector
 from shapely.wkt import loads
 from shapely.geometry import mapping
@@ -55,7 +62,7 @@ def process_all_images():
         # Run AI analysis
         # This calls the VLM (Vision Language Model) to detect damage between the two images
         try:
-            ai_predictions = detector.analyze_damage(pre_path, post_path)
+            ai_predictions = detector.analyze_tile(pre_path, post_path,label_path)
             print(f"  AI found {len(ai_predictions)} buildings")
         except Exception as e:
             print(f"  ❌ Error: {e}")

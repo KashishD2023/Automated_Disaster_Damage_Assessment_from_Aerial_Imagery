@@ -87,8 +87,8 @@ st.markdown(
 # =============================================================================
 # MODEL CONFIG
 # =============================================================================
-DEFAULT_CHAT_MODEL = os.getenv("MODEL_NAME", "gemini-2.5-flash")
-FAST_CHAT_MODEL = "gemini-2.5-flash"
+DEFAULT_CHAT_MODEL = os.getenv("MODEL_NAME", "gemini-3.1-pro-preview")
+FAST_CHAT_MODEL = "gemini-3-flash-preview"
 
 # =============================================================================
 # DAMAGE LEVEL COLOR MAPPING

@@ -115,7 +115,7 @@ POST_DIR = "./data/santa_rosa_demo/post"
 FEMA_DIR = "./data/santa_rosa_demo/fema"
 GROUND_TRUTH_DIR = "./data/santa_rosa_demo/ground_truth"
 
-CACHE_FILE = "./data/santa_rosa_demo/results_cache.json"
+CACHE_FILE = os.getenv("CACHE_FILE", "./data/santa_rosa_demo/results_cache.json")
 
 # =============================================================================
 # HELPERS
